@@ -19,7 +19,7 @@ const ChangePassword = () => {
 
     try {
       const response = await axios.put(
-        'http://localhost:3001/changePassword',
+        'https://inventory-app-admin-code.onrender.com/changePassword',
         { oldPassword, newPassword },
         {
           headers: {

@@ -18,7 +18,7 @@ const Layout = () => {
     const fetchUserData = async () => {
       try {
         const token = window.localStorage.getItem("token");
-        const response = await fetch("http://localhost:3001/layout", {
+        const response = await fetch("https://inventory-app-admin-code.onrender.com/layout", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

@@ -10,7 +10,7 @@ const EmpSignUp = () => {
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    fetch("http://localhost:3001/empSignup", {
+    fetch("https://inventory-app-admin-code.onrender.com/empSignup", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
