@@ -24,7 +24,7 @@ const EmpLogin = () => {
         if (data.status === "ok") {
           alert("login successful");
           window.localStorage.setItem("token", data.data); // Save token correctly
-          window.location.href = "https://66b104a53cf2b426f8b52538--stellular-lamington-a496e8.netlify.app/layout";
+          window.location.href = "https://inventory-app-admin-code.onrender.com/layout";
         } else {
      
           alert("error");
