@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import "./login.css";
-import { Link } from 'react-router-dom';
+import { Link,useNavigate  } from 'react-router-dom';
 
 const EmpLogin = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
 
   const handleSubmit = (event) => {
@@ -24,7 +25,7 @@ const EmpLogin = () => {
         if (data.status === "ok") {
           alert("login successful");
           window.localStorage.setItem("token", data.data); // Save token correctly
-          window.location.href = "/layout";
+          navigate("/layout");
         } else {
      
           alert("error");
