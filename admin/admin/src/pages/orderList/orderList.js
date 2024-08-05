@@ -12,7 +12,7 @@ const Order = ({ filterText, onFilterChange }) => {
   // Define fetchProducts function
   const fetchProducts = async () => {
     try {
-      const response = await axios.get("http://localhost:3003/appliedProducts");
+      const response = await axios.get("https://inventory-app-employee.onrender.com/appliedProducts");
       if (response.status === 200) {
         console.log("Fetched products:", response.data);
         setProducts(response.data);
@@ -31,7 +31,7 @@ const Order = ({ filterText, onFilterChange }) => {
 
   const handleStatusChange = async (productId, newStatus) => {
     try {
-      const response = await axios.put(`http://localhost:3003/appliedProducts/${productId}`, { status: newStatus });
+      const response = await axios.put(`https://inventory-app-employee.onrender.com/appliedProducts/${productId}`, { status: newStatus });
       if (response.status === 200) {
         console.log('Status updated successfully:', response.data);
         // Optionally, refetch products or update the state to reflect changes

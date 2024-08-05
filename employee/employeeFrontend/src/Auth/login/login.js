@@ -12,7 +12,7 @@ const EmpLogin = () => {
       alert("Please fill in all fields.");
       return;
     }
-    fetch("http://localhost:3003/empLogin", {
+    fetch("https://inventory-app-employee.onrender.com/empLogin", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -29,7 +29,7 @@ const EmpLogin = () => {
           window.localStorage.setItem("loggedIn", true);
           console.log('Employee ID stored:', data.data.employeeId);
 
-          fetch("http://localhost:3003/layout", {
+          fetch("https://inventory-app-employee.onrender.com/layout", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",

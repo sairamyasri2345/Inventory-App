@@ -18,7 +18,7 @@ const Layout = () => {
       try {
         const token = window.localStorage.getItem("token");
         const employeeId=window.localStorage.getItem("employeeId")
-        const response = await fetch("http://localhost:3003/layout", { 
+        const response = await fetch("https://inventory-app-employee.onrender.com/layout", { 
           method: "POST",
           headers: {
             "Content-Type": "application/json",

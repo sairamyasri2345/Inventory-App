@@ -14,7 +14,7 @@ const EmployeeDashboard = ({ filterText }) => {
   useEffect(() => {
     const token = window.localStorage.getItem('token');
     if (token) {
-      fetch("http://localhost:3003/layout", {
+      fetch("https://inventory-app-employee.onrender.com/layout", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -35,7 +35,7 @@ const EmployeeDashboard = ({ filterText }) => {
   useEffect(() => {
     const fetchAppliedProducts = async () => {
       try {
-        const response = await axios.get(`http://localhost:3003/appliedProducts/${employeeId}`);
+        const response = await axios.get(`https://inventory-app-employee.onrender.com/appliedProducts/${employeeId}`);
         if (response.status === 200) {
           setAppliedProducts(response.data);
         } else {
@@ -54,7 +54,7 @@ const EmployeeDashboard = ({ filterText }) => {
   useEffect(() => {
     const fetchProductNames = async () => {
       try {
-        const response = await axios.get('http://localhost:3001/products');
+        const response = await axios.get('https://inventory-app-admin-code.onrender.com/products');
         console.log('Response data:', response.data); 
         if (response.data && Array.isArray(response.data.data)) {
           setProductNames(response.data.data.map(product => product.productName));
@@ -94,10 +94,10 @@ const EmployeeDashboard = ({ filterText }) => {
     try {
       let response;
       if (editMode) {
-        response = await axios.put(`http://localhost:3003/updateProduct/${currentProduct._id}`, formData);
+        response = await axios.put(`https://inventory-app-employee.onrender.com/updateProduct/${currentProduct._id}`, formData);
         setAppliedProducts(appliedProducts.map(product => product._id === currentProduct._id ? response.data : product));
       } else {
-        response = await axios.post('http://localhost:3003/applyProduct', formData);
+        response = await axios.post('https://inventory-app-employee.onrender.com/applyProduct', formData);
         setAppliedProducts([...appliedProducts, response.data]);
       }
       handleClose();
@@ -108,7 +108,7 @@ const EmployeeDashboard = ({ filterText }) => {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:3003/deleteProduct/${id}`);
+      await axios.delete(`https://inventory-app-employee.onrender.com/deleteProduct/${id}`);
       setAppliedProducts(appliedProducts.filter(product => product._id !== id));
     } catch (error) {
       console.error('Error deleting product:', error);

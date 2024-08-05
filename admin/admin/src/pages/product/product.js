@@ -11,7 +11,7 @@ const Product = ({ onAddProduct, filterText }) => {
     // Fetch initial products
     const fetchProducts = async () => {
       try {
-        const response = await fetch("http://localhost:3001/products");
+        const response = await fetch("https://inventory-app-admin-code.onrender.com/products");
         const data = await response.json();
         const productsWithDate = data.data.map(product => ({
           ...product,
@@ -39,7 +39,7 @@ const Product = ({ onAddProduct, filterText }) => {
       // Edit existing product
       const productId = products[editIndex]._id;
       try {
-        const response = await fetch(`http://localhost:3001/products/${productId}`, {
+        const response = await fetch(`https://inventory-app-admin-code.onrender.com/${productId}`, {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
@@ -66,7 +66,7 @@ const Product = ({ onAddProduct, filterText }) => {
     } else {
       // Add new product
       try {
-        const response = await fetch("http://localhost:3001/products", {
+        const response = await fetch("https://inventory-app-admin-code.onrender.com/products", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -102,7 +102,7 @@ const Product = ({ onAddProduct, filterText }) => {
     const productId = products[index]._id;
     const deletedProduct = products[index];
     try {
-      const response = await fetch(`http://localhost:3001/products/${productId}`, {
+      const response = await fetch(`https://inventory-app-admin-code.onrender.com/${productId}`, {
         method: "DELETE",
       });
 
