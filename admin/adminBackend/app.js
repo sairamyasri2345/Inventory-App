@@ -135,6 +135,12 @@ app.post("/layout", async (req, res) => {
   }
 });
 
+app.use(express.static(path.join(__dirname, 'admin/build')));
+
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'client/build', 'index.html'));
+});
+
 app.post("/products", async (req, res) => {
   const { productName, quantity, description } = req.body;
 

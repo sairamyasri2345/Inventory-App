@@ -24,7 +24,7 @@ const EmpLogin = () => {
         if (data.status === "ok") {
           alert("login successful");
           window.localStorage.setItem("token", data.data); // Save token correctly
-          window.location.href = "https://inventory-app-admin-code.onrender.com/layout";
+          window.location.href = "/layout";
         } else {
      
           alert("error");
