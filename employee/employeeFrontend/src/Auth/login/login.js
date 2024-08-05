@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import "./login.css";
-import { Link } from 'react-router-dom';
+import { Link,useNavigate } from 'react-router-dom';
 
 const EmpLogin = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -40,7 +41,7 @@ const EmpLogin = () => {
             .then((userData) => {
               if (userData.status === "ok") {
                 window.localStorage.setItem("userData", JSON.stringify(userData.data));
-                window.location.href = "./layout";
+                navigate("/layout");
               }
             });
         } else {
