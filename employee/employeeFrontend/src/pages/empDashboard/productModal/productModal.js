@@ -30,7 +30,8 @@ const EmpProduct = ({
     console.log('Product names in modal:', productNames); // Debug statement
   }, [productNames]);
 
-  const onSave = () => {
+  const onSave = (e) => {
+    e.preventDefault(); 
     if (parseInt(quantity, 10) <= 0) {
       alert('Quantity must be greater than 0.');
       return;
