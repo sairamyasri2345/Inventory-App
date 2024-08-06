@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect,useNavigate} from "react";
 import "./navbar.css";
 
 const EmpNavbar = ({ userData, toggleSidebar, isSidebarOpen, onFilterChange }) => {
@@ -6,10 +6,11 @@ const EmpNavbar = ({ userData, toggleSidebar, isSidebarOpen, onFilterChange }) =
   const [userInitials, setUserInitials] = useState("");
   const [filterText, setFilterText] = useState('');
   const [dropdownOpen, setDropdownOpen] = useState(false); 
+  const navigate = useNavigate();
 
   const handleLogout = () => {
     window.localStorage.clear();
-    window.location.href = "/";
+    navigate("/");
   };
   const toggleDropdown = () => {
     setDropdownOpen(!dropdownOpen);

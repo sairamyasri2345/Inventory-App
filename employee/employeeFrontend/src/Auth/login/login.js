@@ -41,7 +41,7 @@ const EmpLogin = () => {
             .then((userData) => {
               if (userData.status === "ok") {
                 window.localStorage.setItem("userData", JSON.stringify(userData.data));
-                navigate("/layout");
+                navigate("/layout/dashboard");
               }
             });
         } else {

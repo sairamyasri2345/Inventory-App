@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import "./signup.css";
-import { Link } from "react-router-dom";
+import { Link,useNavigate } from "react-router-dom";
 
 const EmpSignUp = () => {
   const [uname, setUname] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -25,7 +26,7 @@ const EmpSignUp = () => {
           alert(data.error);
         } else {
           alert("Signup successful!");
-          window.location.href = "/empLogin";
+          navigate("/empLogin");
         }
       })
       .catch((error) => {
