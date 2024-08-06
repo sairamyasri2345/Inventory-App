@@ -43,10 +43,6 @@ const Order = ({ filterText, onFilterChange }) => {
       console.error('Error updating status:', error);
     }
   };
-  
-  
-
-  
 
   const filteredData = products.filter(
     (item) =>
@@ -102,32 +98,30 @@ const Order = ({ filterText, onFilterChange }) => {
               <th className="py-3">Status</th>
             </tr>
           </thead>
-       
-<tbody>
-  {products.map((item,index) => (
-    <tr key={item._id}>
-         <td>{startRow + index + 1}</td>
-      <td>{item.employeeId}</td>
-      <td>{item.employeeName}</td>
-      <td>{item.productName}</td>
-      <td>{item.quantity}</td>
-      <td>{new Date(item.date).toLocaleDateString('en-GB')}</td>
-      <td>
-        <select
-          value={item.status}
-          onChange={(e) => handleStatusChange(item._id, e.target.value)}
-        >
-          {statusOptions.map((status, idx) => (
-            <option key={idx} value={status}>
-              {status}
-            </option>
-          ))}
-        </select>
-      </td>
-    </tr>
-  ))}
-</tbody>
-
+          <tbody>
+            {currentData.map((item, index) => (
+              <tr key={item._id}>
+                <td>{startRow + index + 1}</td>
+                <td>{item.employeeId}</td>
+                <td>{item.employeeName}</td>
+                <td>{item.productName}</td>
+                <td>{item.quantity}</td>
+                <td>{new Date(item.date).toLocaleDateString('en-GB')}</td>
+                <td>
+                  <select
+                    value={item.status}
+                    onChange={(e) => handleStatusChange(item._id, e.target.value)}
+                  >
+                    {statusOptions.map((status, idx) => (
+                      <option key={idx} value={status}>
+                        {status}
+                      </option>
+                    ))}
+                  </select>
+                </td>
+              </tr>
+            ))}
+          </tbody>
         </table>
       </div>
       <div className="d-flex justify-content-between align-items-center mt-3 mx-3">
