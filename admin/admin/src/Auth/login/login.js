@@ -25,7 +25,7 @@ const EmpLogin = () => {
         if (data.status === "ok") {
           alert("login successful");
           window.localStorage.setItem("token", data.data); // Save token correctly
-          navigate("/layout");
+          navigate("/layout/dashboard");
         } else {
      
           alert("error");

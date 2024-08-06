@@ -1,6 +1,6 @@
-import React, { useState, useEffect,useNavigate} from "react";
+import React, { useState, useEffect} from "react";
 import "./navbar.css";
-
+import { useNavigate  } from 'react-router-dom';
 const EmpNavbar = ({ userData, toggleSidebar, isSidebarOpen, onFilterChange }) => {
   const [currentDate, setCurrentDate] = useState("");
   const [userInitials, setUserInitials] = useState("");
