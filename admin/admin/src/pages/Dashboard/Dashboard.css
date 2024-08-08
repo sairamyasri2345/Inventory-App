@@ -1,4 +1,4 @@
-@media (max-width: 768px) {
+/* @media (max-width: 768px) {
     .d-flex {
       flex-direction: column !important;
     }
@@ -14,11 +14,11 @@
     .form-control {
       width: 100% !important;
     }
-  }
+  } */
   .container-fluid {
     padding: 0 12px;
     margin:0;
-    background-color: rgb(213, 227, 233);
+    /* background-color: rgb(213, 227, 233); */
   }
   
   .card {

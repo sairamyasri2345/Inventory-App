@@ -61,32 +61,18 @@ const Order = ({ filterText, onFilterChange }) => {
   };
 
   return (
-    <div>
-      <div className="d-flex justify-content-between my-3 mx-3">
+    <div className="container-fluid">
+      <div className="row">
+        <div className="col-md-12">
+        <div className="d-flex justify-content-between my-4 mx-3">
         <div>
           <h4>Inventory Items</h4>
         </div>
-        <form className="d-flex ms-3" onSubmit={(e) => e.preventDefault()}>
-          <div className="input-group">
-            <input
-              className="form-control"
-              type="search"
-              placeholder="Search here..."
-              aria-label="Search"
-              value={filterText}
-              onChange={(e) => onFilterChange(e.target.value)}
-            />
-            <button
-              className="btn btn-outline-secondary search-btn d-flex justify-content-center align-items-center"
-              type="submit"
-            >
-              <i className="bi bi-search"></i>
-            </button>
-          </div>
-        </form>
+   
       </div>
-      <div className="table-responsive mx-3">
-        <table className="table table-striped border">
+    <div className="col-md-12">
+    <div className="table-responsive mx-3">
+        <table className="table table-hover" border="1">
           <thead>
             <tr>
               <th className="py-3">S/No</th>
@@ -124,7 +110,9 @@ const Order = ({ filterText, onFilterChange }) => {
           </tbody>
         </table>
       </div>
-      <div className="d-flex justify-content-between align-items-center mt-3 mx-3">
+    </div>
+  <div className="col-md-12">
+  <div className="d-flex justify-content-between align-items-center mt-3 mx-3">
         <span className="Typography_Heading_H5">
           Showing {startRow + 1} to {startRow + currentData.length} of {filteredData.length} entries
         </span>
@@ -148,6 +136,11 @@ const Order = ({ filterText, onFilterChange }) => {
           </button>
         </div>
       </div>
+  </div>
+        </div>
+
+      </div>
+     
     </div>
   );
 };

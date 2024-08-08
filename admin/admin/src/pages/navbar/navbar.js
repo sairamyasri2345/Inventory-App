@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from "react";
 import "./navbar.css";
-import { useNavigate  } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 
 const EmpNavbar = ({
   userData,
-  toggleSidebar,
-  isSidebarOpen,
   onFilterChange,
+  toggleFullScreen,
+  toggleDarkMode,
+  toggleSidebar,
+  sidebarCollapsed,
+  darkMode,
 }) => {
   const [currentDate, setCurrentDate] = useState("");
   const [userInitials, setUserInitials] = useState("");
@@ -21,7 +24,6 @@ const EmpNavbar = ({
   const toggleDropdown = () => {
     setDropdownOpen(!dropdownOpen);
   };
-
   useEffect(() => {
     const date = new Date();
     const formattedDate = `${date.getDate()} ${date.toLocaleString("default", {
@@ -50,63 +52,92 @@ const EmpNavbar = ({
     setFilterText(searchText);
     onFilterChange(searchText);
   };
-
   return (
-    <nav className="navbar navbar-expand-md bg-dark text-white w-100 px-2">
-      <div className="d-flex justify-content-between align-items-center w-100">
-        <div className="d-flex align-items-center">
-          <i
-            className={`bi ${isSidebarOpen ? "bi-list" : "bi-x"} list`}
-            onClick={toggleSidebar}
-          ></i>
-          <form className="d-flex ms-3" onSubmit={(e) => e.preventDefault()}>
-            <div className="input-group">
+    <div className="container-fluid">
+      <div className="row">
+        <div className="col-md-12 p-0 m-0">
+          <nav
+            className={`navbar navbar-section px-2 ${
+              darkMode ? "dark-mode" : "bg-green text-white"
+            }`}
+          >
+            <div className="container-fluid">
               <input
-                className="form-control"
-                type="search"
-                placeholder="Search here..."
-                aria-label="Search"
-                value={filterText}
-                onChange={handleSearchInputChange}
+                type="checkbox"
+                id="toggle-sidebar"
+                className="toggle-sidebar d-none"
+                onChange={toggleSidebar}
+                checked={sidebarCollapsed}
               />
-              <button
-                className="btn btn-outline-secondary search-btn d-flex justify-content-center align-items-center"
-                type="submit"
-              >
-                <i className="bi bi-search"></i>
-              </button>
-            </div>
-          </form>
-        </div>
-        <div className="d-flex align-items-center icons">
-          <div className="d-flex align-items-center text-white">
-            <i className="bi bi-calendar"></i>
-            <span className="px-2">{currentDate}</span>
-          </div>
-          <div className="dropdown ms-3">
-            <div
-              className="d-flex align-items-center dropdown-toggle"
-              onClick={toggleDropdown}
-              style={{ cursor: "pointer" }}
-            >
-              <div className="user-profile mx-2">
-                <p className="profile-initials mx-1">{userInitials}</p>
+              <label htmlFor="toggle-sidebar" id="sidebar-toggle-btn">
+                <i
+                  className={`bi ${
+                    sidebarCollapsed ? "bi-x" : "bi-list"
+                  } icons`}
+                ></i>
+              </label>
+              <div className="input-group w-25 ">
+                <input
+                  className="form-control"
+                  type="search"
+                  placeholder="Search here..."
+                  aria-label="Search"
+                  value={filterText}
+                  onChange={handleSearchInputChange}
+                />
+                <button
+                  className="btn btn-outline-secondary search-btn d-flex justify-content-center align-items-center"
+                  type="submit"
+                >
+                  <i className="bi bi-search"></i>
+                </button>
               </div>
-              <span className="me-2">{userData?.uname || "Adison Jack"}</span>
+
+              <form className="d-flex justify-content-center align-items-center flex-wrap gap-4">
+                <div className="d-flex align-items-center text-white calender-btn p-1 rounded-3">
+                  <i className="bi bi-calendar"></i>
+                  <span className="px-2">{currentDate}</span>
+                </div>
+
+                <i
+                  className="bi bi-moon  screen-icons mx-2 "
+                  id="theme-icon"
+                  onClick={toggleDarkMode}
+                ></i>
+
+                <i
+                  className="bi bi-fullscreen screen-icons mx-2"
+                  onClick={toggleFullScreen}
+                ></i>
+                <div className="d-flex gap-2 justify-content-center align-items-center">
+                  <div className="user-profile ">
+                    <p className="profile-initials mx-1">{userInitials}</p>
+                  </div>
+                  <ul className="list-unstyled m-0 d-flex flex-column justify-content-center pt-2">
+                    <li className="developer text-warning">Admin</li>
+                    <li className="developer h6 dropdown">
+                      {userData?.uname || "Adison Jack"}
+                    </li>
+                  </ul>
+                  {dropdownOpen && (
+                    <ul className="dropdown-menu dropdown-menu-end show">
+                      <li>
+                        <button
+                          className="dropdown-item"
+                          onClick={handleLogout}
+                        >
+                          Logout
+                        </button>
+                      </li>
+                    </ul>
+                  )}
+                </div>
+              </form>
             </div>
-            {dropdownOpen && (
-              <ul className="dropdown-menu dropdown-menu-end show">
-                <li>
-                  <button className="dropdown-item" onClick={handleLogout}>
-                    Logout
-                  </button>
-                </li>
-              </ul>
-            )}
-          </div>
+          </nav>
         </div>
       </div>
-    </nav>
+    </div>
   );
 };
 

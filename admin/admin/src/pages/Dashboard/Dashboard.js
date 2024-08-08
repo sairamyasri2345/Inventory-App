@@ -5,11 +5,12 @@ const Dashboard = ({ products }) => {
   return (
     <div>
       <div className="container-fluid mt-4">
-        <div className="">
-          <h2 className="p-3 Typography_Heading_H2">Inventory Status</h2>
-          <div className="row">
-            <div className="col-md-3 mx-3 card bg-info">
-              <div className="d-flex p-4 gap-3 text-white">
+        <div className="row">
+          
+       
+            <div className="col-lg-3 col-md-6 col-sm-6 col-12 ">
+              <div className="text-white card bg-info mx-2">
+                <div className="d-flex p-4 gap-3 ">
                 <i className="bi bi-cart4"></i>
                 <div>
                   <h4 className="Typography_Heading_H4">Total Products</h4>
@@ -17,8 +18,10 @@ const Dashboard = ({ products }) => {
                 </div>
               </div>
             </div>
-            <div className="col-md-3 card bg-danger mx-3">
-              <div className="d-flex p-4 gap-3 text-white">
+            </div>
+            <div className="col-lg-3 col-md-6 col-sm-6 col-12 ">
+            <div className="text-white card bg-danger mx-2">
+              <div className="d-flex p-4 gap-3 mx-2">
                 <div>
                   <i className="bi bi-cart-x"></i>
                 </div>
@@ -27,8 +30,9 @@ const Dashboard = ({ products }) => {
                   <h4 className="Typography_Heading_H4">{products.length}</h4>
                 </div>
               </div>
+              </div>
             </div>
-          </div>
+         
         </div>
       </div>
     </div>

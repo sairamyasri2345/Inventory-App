@@ -2,20 +2,24 @@ import React, { useState, useEffect } from "react";
 import "./product.css";
 import ProductModal from "./productModal/productModal";
 
-const Product = ({ onAddProduct, filterText }) => {
+const Product = ({ onAddProduct, filterText,darkMode }) => {
   const [show, setShow] = useState(false);
   const [editIndex, setEditIndex] = useState(null);
   const [products, setProducts] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const rowsPerPage = 8;
 
   useEffect(() => {
     // Fetch initial products
     const fetchProducts = async () => {
       try {
-        const response = await fetch("https://inventory-app-admin-code.onrender.com/products");
+        const response = await fetch(
+          "https://inventory-app-admin-code.onrender.com/products"
+        );
         const data = await response.json();
-        const productsWithDate = data.data.map(product => ({
+        const productsWithDate = data.data.map((product) => ({
           ...product,
-          date: new Date().toLocaleDateString()
+          date: new Date().toLocaleDateString(),
         }));
         setProducts(productsWithDate);
         console.log("GET", response.status, data);
@@ -39,13 +43,16 @@ const Product = ({ onAddProduct, filterText }) => {
       // Edit existing product
       const productId = products[editIndex]._id;
       try {
-        const response = await fetch(`https://inventory-app-admin-code.onrender.com/${productId}`, {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(product),
-        });
+        const response = await fetch(
+          `https://inventory-app-admin-code.onrender.com/${productId}`,
+          {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(product),
+          }
+        );
 
         if (!response.ok) {
           throw new Error("Failed to update product");
@@ -57,7 +64,7 @@ const Product = ({ onAddProduct, filterText }) => {
         const updatedProducts = [...products];
         updatedProducts[editIndex] = {
           ...data.data,
-          date: new Date().toLocaleDateString() 
+          date: new Date().toLocaleDateString(),
         };
         setProducts(updatedProducts);
       } catch (error) {
@@ -66,30 +73,33 @@ const Product = ({ onAddProduct, filterText }) => {
     } else {
       // Add new product
       try {
-        const response = await fetch("https://inventory-app-admin-code.onrender.com/products", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            ...product,
-            date: new Date().toLocaleDateString() 
-          }),
-        });
+        const response = await fetch(
+          "https://inventory-app-admin-code.onrender.com/products",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              ...product,
+              date: new Date().toLocaleDateString(),
+            }),
+          }
+        );
 
         if (!response.ok) {
           throw new Error("Failed to save product");
         }
 
         const data = await response.json();
-        console.log("post",response.status, data);
+        console.log("post", response.status, data);
 
         setProducts([
           ...products,
           {
             ...data.data,
-            date: new Date().toLocaleDateString() 
-          }
+            date: new Date().toLocaleDateString(),
+          },
         ]);
       } catch (error) {
         console.error("Error saving product:", error);
@@ -102,9 +112,12 @@ const Product = ({ onAddProduct, filterText }) => {
     const productId = products[index]._id;
     const deletedProduct = products[index];
     try {
-      const response = await fetch(`https://inventory-app-admin-code.onrender.com/${productId}`, {
-        method: "DELETE",
-      });
+      const response = await fetch(
+        `https://inventory-app-admin-code.onrender.com/${productId}`,
+        {
+          method: "DELETE",
+        }
+      );
 
       if (!response.ok) {
         throw new Error("Failed to delete product");
@@ -112,7 +125,7 @@ const Product = ({ onAddProduct, filterText }) => {
       console.log("DELETE", response.status, deletedProduct);
 
       const newProducts = products.filter((_, i) => i !== index);
- 
+
       setProducts(newProducts);
     } catch (error) {
       console.error("Error deleting product:", error);
@@ -123,59 +136,104 @@ const Product = ({ onAddProduct, filterText }) => {
     setEditIndex(index);
     setShow(true);
   };
-
+  const filteredData = products.filter(
+    (item) =>
+      (item.employeeId || "").includes(filterText) ||
+      (item.employeeName || "").toLowerCase().includes(filterText.toLowerCase()) ||
+      (item.date || "").includes(filterText) ||
+      (item.status || "").toLowerCase().includes(filterText.toLowerCase())
+  );
+  
   const filteredProducts = products.filter((product) =>
     product.productName.toLowerCase().includes(filterText.toLowerCase())
   );
+  const totalPages = Math.ceil(filteredData.length / rowsPerPage);
+  const startRow = (currentPage - 1) * rowsPerPage;
+  const currentData = filteredData.slice(startRow, startRow + rowsPerPage);
+
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
 
   return (
-    <div>
-      <div className="card m-3">
-        <div className="card-body">
-          <div className="d-flex justify-content-end">
-            <button onClick={handleShow} className="btn btn-success mb-4">
-              <i className="bi bi-plus-lg px-2"></i>
-              Add Product
-            </button>
-          </div>
-          <div className="table-responsive">
-            <table className="table table-striped table-bordered table-hover">
-              <thead>
-                <tr>
-                  <th>#</th>
-                  <th>Product</th>
-                  <th>Quantity</th>
-                  <th>Date</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredProducts.map((product, index) => (
-                  <tr key={index}>
-                    <td>{index + 1}</td>
-                    <td>{product.productName}</td>
-                    <td>{product.quantity}</td>
-                    <td>{product.date}</td>
-                    <td>
-                      <button
-                        className="btn btn-primary me-2 btn-sm"
-                        onClick={() => handleEdit(index)}
-                      >
-                        <i className="bi bi-pencil-square"></i>
-                      </button>
-                      <button
-                        className="btn btn-danger me-2 btn-sm"
-                        onClick={() => handleDelete(index)}
-                      >
-                        <i className="bi bi-trash"></i>
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+    <div className={`container-fluid main-conatiner ${darkMode ? "dark-mode" : ""}`}>
+      <div className="row">
+        <div className="col-md-12">
+          <div className="card m-3 
+          ">
+            <div className="card-body">
+              <div className="d-flex justify-content-end">
+                <button onClick={handleShow} className="btn btn-success mb-4">
+                  <i className="bi bi-plus-lg px-2"></i>
+                  Add Product
+                </button>
+              </div>
+              <div className="table-responsive">
+                <table className="table  table-hover " border="1">
+                  <thead>
+                    <tr>
+                      <th scope="col">#</th>
+                      <th scope="col">Product</th>
+                      <th scope="col">Quantity</th>
+                      <th scope="col">Date</th>
+                      <th scope="col">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {filteredProducts.map((product, index) => (
+                      <tr key={index}>
+                        <td>{index + 1}</td>
+                        <td>{product.productName}</td>
+                        <td>{product.quantity}</td>
+                        <td>{product.date}</td>
+                        <td>
+                          <button
+                            className="btn btn-primary me-2 btn-sm"
+                            onClick={() => handleEdit(index)}
+                          >
+                            <i className="bi bi-pencil-square"></i>
+                          </button>
+                          <button
+                            className="btn btn-danger me-2 btn-sm"
+                            onClick={() => handleDelete(index)}
+                          >
+                            <i className="bi bi-trash"></i>
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
           </div>
         </div>
+      </div>
+      <div>
+      <div className="d-flex justify-content-between align-items-center mt-3 mx-3">
+        <span className="Typography_Heading_H5">
+          Showing {startRow + 1} to {startRow + currentData.length} of {filteredData.length} entries
+        </span>
+        <div>
+          <button
+            className="btn btn-outline-secondary me-2"
+            onClick={() => handlePageChange(currentPage - 1)}
+            disabled={currentPage === 1}
+          >
+            <i className="bi bi-chevron-left Typography_Heading_H5"></i>
+          </button>
+          <span className="Typography_Heading_H5">
+            {currentPage} of {totalPages}
+          </span>
+          <button
+            className="btn btn-outline-secondary ms-2"
+            onClick={() => handlePageChange(currentPage + 1)}
+            disabled={currentPage === totalPages}
+          >
+            <i className="bi bi-chevron-right Typography_Heading_H5"></i>
+          </button>
+        </div>
+      </div>
       </div>
 
       <ProductModal
