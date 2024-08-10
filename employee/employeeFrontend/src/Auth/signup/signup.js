@@ -45,7 +45,7 @@ const EmpSignUp = () => {
   
 
   return (
-    <div className="container-fluid d-flex align-items-center justify-content-center min-vh-100 p-3">
+    <div className="container-fluid  signup-cont d-flex align-items-center justify-content-center min-vh-100 p-3">
       <div className="row justify-content-center w-100">
         <div className="col-lg-11 d-flex justify-content-center align-items-center">
           <div className="form-container d-flex flex-column flex-md-row bg-white shadow-sm rounded-5 w-100">

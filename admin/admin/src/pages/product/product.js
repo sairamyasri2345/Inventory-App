@@ -17,6 +17,7 @@ const Product = ({ onAddProduct, filterText,darkMode }) => {
           "https://inventory-app-admin-code.onrender.com/products"
         );
         const data = await response.json();
+        console.log("Fetched Products Data:", data); 
         const productsWithDate = data.data.map((product) => ({
           ...product,
           date: new Date().toLocaleDateString(),
@@ -44,7 +45,7 @@ const Product = ({ onAddProduct, filterText,darkMode }) => {
       const productId = products[editIndex]._id;
       try {
         const response = await fetch(
-          `https://inventory-app-admin-code.onrender.com/${productId}`,
+          `https://inventory-app-admin-code.onrender.com/products/${productId}`,
           {
             method: "PUT",
             headers: {
@@ -113,7 +114,7 @@ const Product = ({ onAddProduct, filterText,darkMode }) => {
     const deletedProduct = products[index];
     try {
       const response = await fetch(
-        `https://inventory-app-admin-code.onrender.com/${productId}`,
+        `https://inventory-app-admin-code.onrender.com/products/${productId}`,
         {
           method: "DELETE",
         }
@@ -156,7 +157,7 @@ const Product = ({ onAddProduct, filterText,darkMode }) => {
   };
 
   return (
-    <div className={`container-fluid main-conatiner ${darkMode ? "dark-mode" : ""}`}>
+    <div className={`container-fluid  ${darkMode ? "dark-mode" : ""}`}>
       <div className="row">
         <div className="col-md-12">
           <div className="card m-3 
@@ -169,11 +170,12 @@ const Product = ({ onAddProduct, filterText,darkMode }) => {
                 </button>
               </div>
               <div className="table-responsive">
-                <table className="table  table-hover " border="1">
-                  <thead>
+                <table className="table  table-hover" border={1}>
+                  <thead className="table-light">
                     <tr>
                       <th scope="col">#</th>
                       <th scope="col">Product</th>
+                      <th scope="col">Availability</th>
                       <th scope="col">Quantity</th>
                       <th scope="col">Date</th>
                       <th scope="col">Actions</th>
@@ -184,11 +186,20 @@ const Product = ({ onAddProduct, filterText,darkMode }) => {
                       <tr key={index}>
                         <td>{index + 1}</td>
                         <td>{product.productName}</td>
+                        <td>
+              {product.quantity > 0 ? (
+                <span className="badge bg-success p-2">Available</span>
+              ) : (
+                <span className="badge bg-danger p-2">Not Available</span>
+              )}
+            </td>
                         <td>{product.quantity}</td>
+      
+                        
                         <td>{product.date}</td>
                         <td>
                           <button
-                            className="btn btn-primary me-2 btn-sm"
+                            className="btn btn-success me-2 btn-sm"
                             onClick={() => handleEdit(index)}
                           >
                             <i className="bi bi-pencil-square"></i>

@@ -62,20 +62,23 @@ app.post("/empLogin", async (req, res) => {
       return res.status(404).json({ error: "User Not Found" });
     }
 
-    if (await bcrypt.compare(password, user.password)) {
+    const isPasswordCorrect = await bcrypt.compare(password, user.password);
+
+    if (isPasswordCorrect) {
       const token = jwt.sign({ userId: user._id }, JWT_SECRET, {
         expiresIn: "2h",
       });
 
       return res.status(200).json({ status: "ok", data: token });
+    } else {
+      return res.status(401).json({ status: "error", error: "Invalid Password" });
     }
-
-    return res.status(401).json({ status: "error", error: "Invalid Password" });
   } catch (error) {
     console.error("Login error:", error);
     return res.status(500).json({ status: "error", error: "Server Error" });
   }
 });
+
 const verifyToken = (req, res, next) => {
   const token = req.headers['authorization']?.split(' ')[1];
   if (!token) return res.status(401).json({ error: "Unauthorized" });
@@ -142,13 +145,14 @@ app.post("/layout", async (req, res) => {
 // });
 
 app.post("/products", async (req, res) => {
-  const { productName, quantity, description } = req.body;
+  const { productName, quantity, description} = req.body;
 
   try {
     const newProduct = new Product({
       productName,
       quantity,
       description,
+    
     });
 
     const savedProduct = await newProduct.save();
@@ -160,12 +164,12 @@ app.post("/products", async (req, res) => {
 
 app.put("/products/:id", async (req, res) => {
   const { id } = req.params;
-  const { productName, quantity, description } = req.body;
+  const { productName, quantity, description} = req.body;
 
   try {
     const updatedProduct = await Product.findByIdAndUpdate(
       id,
-      { productName, quantity, description },
+      { productName, quantity, description, },
       { new: true }
     );
 

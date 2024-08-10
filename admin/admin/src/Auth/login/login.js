@@ -1,15 +1,60 @@
 import React, { useState } from 'react';
 import "./login.css";
-import { Link,useNavigate  } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const EmpLogin = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isChecked, setIsChecked] = useState(false);
+  const [emailError, setEmailError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+  const [checkError, setCheckError] = useState("");
   const navigate = useNavigate();
 
+  const validateEmail = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
+  const validateForm = () => {
+    let valid = true;
+
+    if (!email) {
+      setEmailError("Email is required");
+      valid = false;
+    } else if (!validateEmail(email)) {
+      setEmailError("Please enter a valid email address");
+      valid = false;
+    } else {
+      setEmailError("");
+    }
+
+    if (!password) {
+      setPasswordError("Password is required");
+      valid = false;
+    } else if (password.length < 6) {
+      setPasswordError("Password must be at least 6 characters long");
+      valid = false;
+    } else {
+      setPasswordError("");
+    }
+
+    if (!isChecked) {
+      setCheckError("Please check this box if you want to proceed");
+      valid = false;
+    } else {
+      setCheckError("");
+    }
+
+    return valid;
+  };
 
   const handleSubmit = (event) => {
     event.preventDefault();
+    if (!validateForm()) {
+      return;
+    }
+
     fetch("https://inventory-app-admin-code.onrender.com/empLogin", {
       method: "POST",
       headers: {
@@ -20,22 +65,17 @@ const EmpLogin = () => {
     })
       .then((res) => res.json())
       .then((data) => {
-      
-        console.log(data);
         if (data.status === "ok") {
-          alert("login successful");
-          window.localStorage.setItem("token", data.data); // Save token correctly
+          window.localStorage.setItem("token", data.data);
           navigate("/layout/dashboard");
         } else {
-     
-          alert("error");
+          alert("Invalid login credentials");
         }
       })
       .catch((error) => {
         console.error("Error during fetch:", error);
         alert("An error occurred during login.");
       });
-    
   };
 
   return (
@@ -75,6 +115,7 @@ const EmpLogin = () => {
                   placeholder="Enter Your Email"
                   value={email}
                 />
+                {emailError && <div className="text-danger d-flex justify-content-end">{emailError}</div>}
               </div>
               <div className="form-group my-2">
                 <label htmlFor="exampleInputPassword1" className="py-2">Password</label>
@@ -86,10 +127,17 @@ const EmpLogin = () => {
                   placeholder="Password"
                   value={password}
                 />
+                {passwordError && <div className="text-danger d-flex justify-content-end">{passwordError}</div>}
               </div>
               <div className="form-check my-2">
-                <input type="checkbox" className="form-check-input" id="check" />
+                <input 
+                  type="checkbox" 
+                  className="form-check-input" 
+                  id="check" 
+                  onChange={(e) => setIsChecked(e.target.checked)}
+                />
                 <label className="form-check-label" htmlFor="check">Remember me</label>
+                {checkError && <div className="text-danger">{checkError}</div>}
               </div>
               <button type="submit" className="btn btn-success w-100 btn-lg my-3 rounded-5">
                 LOGIN
@@ -97,8 +145,11 @@ const EmpLogin = () => {
               <div className="text-center">
                 <h5>(or)</h5>
                 <h5 className="my-3">
-                  Don't have an account?<Link className="nav-link text-white fs-5 d-inline text-decoration-none " to="/empSignup"><span className="text-success px-1"> 
-                  Register</span></Link> Here
+                  Don't have an account?
+                  <Link className="nav-link text-white fs-5 d-inline text-decoration-none" to="/empSignup">
+                    <span className="text-success px-1">Register</span>
+                  </Link> 
+                  Here
                 </h5>
               </div>
             </form>

@@ -10,6 +10,8 @@ const EmployeeDashboard = ({ filterText }) => {
   const [productNames, setProductNames] = useState([]);
   const [employeeId, setEmployeeId] = useState('');
   const [currentProduct, setCurrentProduct] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const rowsPerPage = 8;
 
   useEffect(() => {
     const token = window.localStorage.getItem('token');
@@ -121,55 +123,100 @@ const EmployeeDashboard = ({ filterText }) => {
     setShow(true);
   };
 
+  // Pagination logic
+  const totalPages = Math.ceil(filteredProducts.length / rowsPerPage);
+  const startRow = (currentPage - 1) * rowsPerPage;
+  const currentData = filteredProducts.slice(startRow, startRow + rowsPerPage);
+
+  const handlePageChange = (newPage) => {
+    if (newPage >= 1 && newPage <= totalPages) {
+      setCurrentPage(newPage);
+    }
+  };
+
   return (
-    <div>
-      <div className="d-flex justify-content-end mx-3 my-3">
-        <button onClick={handleShow} className="btn btn-success mb-4">
-          <i className="bi bi-plus-lg px-2"></i>
-          Apply Product
-        </button>
+    <div className='container-fluid'>
+      <div className='row'>
+        <div className="col-md-12">
+          <div className="card m-3">
+            <div className="card-body">
+              <div className="d-flex justify-content-end mx-3 my-3">
+                <button onClick={handleShow} className="btn btn-success mb-4">
+                  <i className="bi bi-plus-lg px-2"></i>
+                  Apply Product
+                </button>
+              </div>
+              <div className="table-responsive mx-3 my-3">
+                <table className="table table-hover" border={1}>
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>Employee ID</th>
+                      <th>Employee Name</th>
+                      <th>Product Name</th>
+                      <th>Quantity</th>
+                      <th>Date</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {currentData.map((product, index) => (
+                      <tr key={index}>
+                        <td>{startRow + index + 1}</td>
+                        <td>{product.employeeId}</td>
+                        <td>{product.employeeName}</td>
+                        <td>{product.productName}</td>
+                        <td>{product.quantity}</td>
+                        <td>{new Date(product.date).toLocaleDateString('en-GB')}</td>
+                        <td>
+                          <button
+                            className="btn btn-warning btn-sm mx-1"
+                            onClick={() => handleEdit(product)}
+                          >
+                            <i className="bi bi-pencil"></i>
+                          </button>
+                          <button
+                            className="btn btn-danger btn-sm mx-1"
+                            onClick={() => handleDelete(product._id)}
+                          >
+                            <i className="bi bi-trash"></i>
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+         
+            </div>
+          </div>
+
+        </div>
       </div>
-      <div className="table-responsive mx-3 my-3">
-        <table className="table table-striped table-bordered table-hover">
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>Employee ID</th>
-              <th>Employee Name</th>
-              <th>Product Name</th>
-              <th>Quantity</th>
-              <th>Date</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredProducts.map((product, index) => (
-              <tr key={index}>
-                <td>{index + 1}</td>
-                <td>{product.employeeId}</td>
-                <td>{product.employeeName}</td>
-                <td>{product.productName}</td>
-                <td>{product.quantity}</td>
-                <td>{new Date(product.date).toLocaleDateString('en-GB')}</td>
-                <td>
+      <div className="d-flex justify-content-between align-items-center mt-3 mx-3">
+                <span className="Typography_Heading_H5">
+                  Showing {startRow + 1} to {startRow + currentData.length} of {filteredProducts.length} entries
+                </span>
+                <div>
                   <button
-                    className="btn btn-warning btn-sm mx-1"
-                    onClick={() => handleEdit(product)}
+                    className="btn btn-outline-secondary me-2"
+                    onClick={() => handlePageChange(currentPage - 1)}
+                    disabled={currentPage === 1}
                   >
-                    <i className="bi bi-pencil"></i>
+                    <i className="bi bi-chevron-left Typography_Heading_H5"></i>
                   </button>
+                  <span className="Typography_Heading_H5">
+                    {currentPage} of {totalPages}
+                  </span>
                   <button
-                    className="btn btn-danger btn-sm mx-1"
-                    onClick={() => handleDelete(product._id)}
+                    className="btn btn-outline-secondary ms-2"
+                    onClick={() => handlePageChange(currentPage + 1)}
+                    disabled={currentPage === totalPages}
                   >
-                    <i className="bi bi-trash"></i>
+                    <i className="bi bi-chevron-right Typography_Heading_H5"></i>
                   </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+                </div>
+              </div>
       <EmpProduct
         show={show}
         handleClose={handleClose}

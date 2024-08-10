@@ -1,15 +1,40 @@
 import React, { useState } from "react";
 import "./signup.css";
-import { Link,useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const EmpSignUp = () => {
   const [uname, setUname] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [errors, setErrors] = useState({});
   const navigate = useNavigate();
+
+  const validateForm = () => {
+    const newErrors = {};
+    if (!uname.trim()) {
+      newErrors.uname = "Full name is required";
+    }
+    if (!email.trim()) {
+      newErrors.email = "Email address is required";
+    } else if (!/\S+@\S+\.\S+/.test(email)) {
+      newErrors.email = "Email address is invalid";
+    }
+    if (!password) {
+      newErrors.password = "Password is required";
+    } else if (password.length < 6) {
+      newErrors.password = "Password must be at least 6 characters";
+    }
+    return newErrors;
+  };
 
   const handleSubmit = (event) => {
     event.preventDefault();
+
+    const formErrors = validateForm();
+    if (Object.keys(formErrors).length > 0) {
+      setErrors(formErrors);
+      return;
+    }
 
     fetch("https://inventory-app-admin-code.onrender.com/empSignup", {
       method: "POST",
@@ -21,11 +46,9 @@ const EmpSignUp = () => {
     })
       .then((res) => res.json())
       .then((data) => {
-        console.log(data, "userRegister");
         if (data.error) {
           alert(data.error);
         } else {
-          alert("Signup successful!");
           navigate("/empLogin");
         }
       })
@@ -71,12 +94,15 @@ const EmpSignUp = () => {
                 </label>
                 <input
                   type="text"
-                  className="form-control"
+                  className={`form-control ${errors.uname ? "is-invalid" : ""}`}
                   onChange={(e) => setUname(e.target.value)}
                   id="name"
                   placeholder="Enter Your Name"
                   value={uname}
                 />
+                {errors.uname && (
+                  <div className="invalid-feedback">{errors.uname}</div>
+                )}
               </div>
               <div className="form-group my-2">
                 <label htmlFor="email" className="py-2">
@@ -84,12 +110,15 @@ const EmpSignUp = () => {
                 </label>
                 <input
                   type="email"
-                  className="form-control"
+                  className={`form-control ${errors.email ? "is-invalid" : ""}`}
                   id="email"
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="Enter Your Email"
                   value={email}
                 />
+                {errors.email && (
+                  <div className="invalid-feedback">{errors.email}</div>
+                )}
               </div>
               <div className="form-group my-2">
                 <label htmlFor="exampleInputPassword1" className="py-2">
@@ -97,12 +126,17 @@ const EmpSignUp = () => {
                 </label>
                 <input
                   type="password"
-                  className="form-control"
+                  className={`form-control ${
+                    errors.password ? "is-invalid" : ""
+                  }`}
                   id="exampleInputPassword1"
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Password"
                   value={password}
                 />
+                {errors.password && (
+                  <div className="invalid-feedback">{errors.password}</div>
+                )}
               </div>
               <div className="form-check my-2">
                 <input

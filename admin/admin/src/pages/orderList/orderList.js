@@ -3,16 +3,17 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 import "./orderList.css";
 import axios from "axios";
 
-const Order = ({ filterText, onFilterChange }) => {
+const Order = ({ filterText }) => {
   const [products, setProducts] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [statusOptions] = useState(["Pending", "Approved", "Not Available"]);
   const rowsPerPage = 8;
 
-  // Define fetchProducts function
   const fetchProducts = async () => {
     try {
-      const response = await axios.get("https://inventory-app-employee.onrender.com/appliedProducts");
+      const response = await axios.get(
+        "https://inventory-app-employee.onrender.com/appliedProducts"
+      );
       if (response.status === 200) {
         console.log("Fetched products:", response.data);
         setProducts(response.data);
@@ -24,7 +25,6 @@ const Order = ({ filterText, onFilterChange }) => {
     }
   };
 
-  // Fetch products on component mount
   useEffect(() => {
     fetchProducts();
   }, []);
@@ -34,7 +34,6 @@ const Order = ({ filterText, onFilterChange }) => {
       const response = await axios.put(`https://inventory-app-employee.onrender.com/appliedProducts/${productId}`, { status: newStatus });
       if (response.status === 200) {
         console.log('Status updated successfully:', response.data);
-        // Optionally, refetch products or update the state to reflect changes
         fetchProducts();
       } else {
         console.error('Error updating status:', response.data.error);
@@ -46,10 +45,11 @@ const Order = ({ filterText, onFilterChange }) => {
 
   const filteredData = products.filter(
     (item) =>
-      item.employeeId.includes(filterText) ||
-      item.employeeName.toLowerCase().includes(filterText.toLowerCase()) ||
-      item.date.includes(filterText) ||
-      item.status.toLowerCase().includes(filterText.toLowerCase())
+      (item.employeeId || "").includes(filterText) ||
+      (item.employeeName || "").toLowerCase().includes(filterText.toLowerCase()) ||
+      (item.date || "").includes(filterText) ||
+      (item.status || "").toLowerCase().includes(filterText.toLowerCase()) ||
+      (item.productName || "").toLowerCase().includes(filterText.toLowerCase())
   );
 
   const totalPages = Math.ceil(filteredData.length / rowsPerPage);
@@ -62,87 +62,84 @@ const Order = ({ filterText, onFilterChange }) => {
 
   return (
     <div className="container-fluid">
-      <div className="row">
+      <div className="row p-5">
         <div className="col-md-12">
-        <div className="d-flex justify-content-between my-4 mx-3">
-        <div>
-          <h4>Inventory Items</h4>
+          <div className="table-responsive mx-3">
+            <table className="table table-hover" border={1}>
+              <thead className="table-light">
+                <tr>
+                  <th className="py-3">S/No</th>
+                  <th className="py-3">Employee Id</th>
+                  <th className="py-3">Employee Name</th>
+                  <th className="py-3">Product</th>
+                  <th className="py-3">Quantity</th>
+                  <th className="py-3">Date</th>
+                  <th className="py-3">Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                {currentData.map((item, index) => (
+                  <tr key={item._id}>
+                    <td>{startRow + index + 1}</td>
+                    <td>{item.employeeId}</td>
+                    <td>{item.employeeName}</td>
+                    <td>{item.productName}</td>
+                    <td>{item.quantity}</td>
+                    <td>
+                      {new Date(item.date).toLocaleDateString("en-GB")}
+                    </td>
+                    <td>
+                      <select
+                        value={item.status}
+                        onChange={(e) =>
+                          handleStatusChange(item._id, e.target.value)
+                        }
+                      >
+                        {statusOptions.map((status, idx) => (
+                          <option key={idx} value={status}>
+                            {status}
+                          </option>
+                        ))}
+                      </select>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
-   
-      </div>
-    <div className="col-md-12">
-    <div className="table-responsive mx-3">
-        <table className="table table-hover" border="1">
-          <thead>
-            <tr>
-              <th className="py-3">S/No</th>
-              <th className="py-3">Employee Id</th>
-              <th className="py-3">Employee Name</th>
-              <th className="py-3">Product</th>
-              <th className="py-3">Quantity</th>
-              <th className="py-3">Date</th>
-              <th className="py-3">Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            {currentData.map((item, index) => (
-              <tr key={item._id}>
-                <td>{startRow + index + 1}</td>
-                <td>{item.employeeId}</td>
-                <td>{item.employeeName}</td>
-                <td>{item.productName}</td>
-                <td>{item.quantity}</td>
-                <td>{new Date(item.date).toLocaleDateString('en-GB')}</td>
-                <td>
-                  <select
-                    value={item.status}
-                    onChange={(e) => handleStatusChange(item._id, e.target.value)}
-                  >
-                    {statusOptions.map((status, idx) => (
-                      <option key={idx} value={status}>
-                        {status}
-                      </option>
-                    ))}
-                  </select>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </div>
-  <div className="col-md-12">
-  <div className="d-flex justify-content-between align-items-center mt-3 mx-3">
-        <span className="Typography_Heading_H5">
-          Showing {startRow + 1} to {startRow + currentData.length} of {filteredData.length} entries
-        </span>
-        <div>
-          <button
-            className="btn btn-outline-secondary me-2"
-            onClick={() => handlePageChange(currentPage - 1)}
-            disabled={currentPage === 1}
-          >
-            <i className="bi bi-chevron-left Typography_Heading_H5"></i>
-          </button>
-          <span className="Typography_Heading_H5">
-            {currentPage} of {totalPages}
-          </span>
-          <button
-            className="btn btn-outline-secondary ms-2"
-            onClick={() => handlePageChange(currentPage + 1)}
-            disabled={currentPage === totalPages}
-          >
-            <i className="bi bi-chevron-right Typography_Heading_H5"></i>
-          </button>
+        <div className="col-md-12">
+          <div className="d-flex justify-content-between align-items-center mt-3 mx-3">
+            <span className="Typography_Heading_H5">
+              Showing {startRow + 1} to {startRow + currentData.length} of {filteredData.length} entries
+            </span>
+            <div>
+              <button
+                className="btn btn-outline-secondary me-2"
+                onClick={() => handlePageChange(currentPage - 1)}
+                disabled={currentPage === 1}
+              >
+                <i className="bi bi-chevron-left Typography_Heading_H5"></i>
+              </button>
+              <span className="Typography_Heading_H5">
+                {currentPage} of {totalPages}
+              </span>
+              <button
+                className="btn btn-outline-secondary ms-2"
+                onClick={() => handlePageChange(currentPage + 1)}
+                disabled={currentPage === totalPages}
+              >
+                <i className="bi bi-chevron-right Typography_Heading_H5"></i>
+              </button>
+            </div>
+          </div>
         </div>
       </div>
-  </div>
-        </div>
-
-      </div>
-     
     </div>
   );
 };
 
 export default Order;
+
+
+

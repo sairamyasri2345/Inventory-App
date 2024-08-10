@@ -35,7 +35,7 @@
     font-size:40px;
   }
   input[type="search"] {
-    background-color: #e8f5f8;
+    background-color: white;
     border: none;
     color:rgb(53, 51, 51) !important;
     border-radius: 15px;
@@ -57,14 +57,18 @@
     padding:3px;
 
   }
+  .search-btn:hover {
+    background-color: white!important;
+  }
+
   .input-group {
-    background-color: #e8f5f8;
+    background-color: white;
     border-radius: 15px;
     color:rgb(41, 38, 38) !important;
     border: none;
   }
   .form-control:focus {
-    background-color: #e6f9fd !important;
+    background-color: white !important;
     box-shadow: 0 0 0 !important;
     
 }
@@ -264,4 +268,7 @@
 .calender-btn{
  border:1px solid white;
 
+}
+.profile-initials{
+  margin-top: 0.07rem ;
 }

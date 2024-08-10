@@ -6,7 +6,7 @@
   border-color: 1px solid gray;
 }
 .table > :not(caption) > * > * {
-  border-bottom-width: 0 !important;
+  /* border-bottom-width: 0 !important; */
   padding: 1rem !important;
 }
 
@@ -17,8 +17,4 @@
 
 .dark-mode .table > :not(caption) > * > * {
   background-color: black !important;
-}
-.main-conatiner{
-  background-color: rgb(228, 238, 247);
-  height:46rem;
 }

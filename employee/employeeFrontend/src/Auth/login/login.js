@@ -24,7 +24,7 @@ const EmpLogin = () => {
       .then((res) => res.json())
       .then((data) => {
         if (data.status === "ok") {
-          alert("login successful");
+          // alert("login successful");
           window.localStorage.setItem("token", data.data.token);
           window.localStorage.setItem('employeeId', data.data.employeeId);
           window.localStorage.setItem("loggedIn", true);
@@ -51,7 +51,7 @@ const EmpLogin = () => {
   };
 
   return (
-    <div className="container-fluid d-flex align-items-center justify-content-center vh-100 p-5">
+    <div className="container-fluid signup-cont d-flex align-items-center justify-content-center vh-100 p-5">
       <div className="row justify-content-center w-100">
         <div className="col-lg-11 d-flex justify-content-center align-items-center">
           <div className="form-container d-flex flex-column flex-md-row bg-white shadow-sm rounded-5 w-100">

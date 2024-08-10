@@ -57,50 +57,74 @@ const Order = ({ filterText, onFilterChange }) => {
   const currentData = filteredData.slice(startRow, startRow + rowsPerPage);
 
   const handlePageChange = (pageNumber) => {
-    setCurrentPage(pageNumber);
+    if (pageNumber >= 1 && pageNumber <= totalPages) {
+      setCurrentPage(pageNumber);
+    }
   };
 
   return (
-    <div>
-      <div className="table-responsive mx-3 my-4">
-        <table className="table table-striped bordertable-responsive ">
-          <thead>
-            <tr>
-              <th className='py-3'>S/No</th>
-              <th className='py-3'>Employee Id</th>
-              <th className='py-3'>Employee Name</th>
-              <th className='py-3'>Product</th>
-              <th className='py-3'>Quantity</th>
-              <th className='py-3'>Date</th>
-              <th className='py-3'>Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            {currentData.map((item, index) => (
-              <tr key={item._id}>
-                <td>{startRow + index + 1}</td>
-                <td>{item.employeeId}</td>
-                <td>{item.employeeName}</td>
-                <td>{item.productName}</td>
-                <td>{item.quantity}</td>
-                <td>{item.date}</td>
-                <td>{item.status}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+    <div className='container-fluid'>
+      <div className='row'>
+        <div className='col-md-12'>
+          <div className='card m-4'>
+            <div className='card-body'>
+              <div className="table-responsive mx-3 my-4">
+                <table className="table table-hover" border={1}>
+                  <thead>
+                    <tr>
+                      <th className='py-3'>S/No</th>
+                      <th className='py-3'>Employee Id</th>
+                      <th className='py-3'>Employee Name</th>
+                      <th className='py-3'>Product</th>
+                      <th className='py-3'>Quantity</th>
+                      <th className='py-3'>Date</th>
+                      <th className='py-3'>Status</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {currentData.map((item, index) => (
+                      <tr key={item._id}>
+                        <td>{startRow + index + 1}</td>
+                        <td>{item.employeeId}</td>
+                        <td>{item.employeeName}</td>
+                        <td>{item.productName}</td>
+                        <td>{item.quantity}</td>
+                        <td>{item.date}</td>
+                        <td>{item.status}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+          
+            </div>
+          </div>
+        </div>
       </div>
-      <div className="pagination-container d-flex justify-content-end my-3 mx-3">
-        <ul className="pagination">
-          {Array.from({ length: totalPages }, (_, index) => (
-            <li key={index + 1} className={`page-item ${index + 1 === currentPage ? 'active' : ''}`}>
-              <button className="page-link" onClick={() => handlePageChange(index + 1)}>
-                {index + 1}
-              </button>
-            </li>
-          ))}
-        </ul>
-      </div>
+      <div className="d-flex justify-content-between align-items-center mt-3 mx-3">
+                <span className="Typography_Heading_H5">
+                  Showing {startRow + 1} to {startRow + currentData.length} of {filteredData.length} entries
+                </span>
+                <div>
+                  <button
+                    className="btn btn-outline-secondary me-2"
+                    onClick={() => handlePageChange(currentPage - 1)}
+                    disabled={currentPage === 1}
+                  >
+                    <i className="bi bi-chevron-left Typography_Heading_H5"></i>
+                  </button>
+                  <span className="Typography_Heading_H5">
+                    {currentPage} of {totalPages}
+                  </span>
+                  <button
+                    className="btn btn-outline-secondary ms-2"
+                    onClick={() => handlePageChange(currentPage + 1)}
+                    disabled={currentPage === totalPages}
+                  >
+                    <i className="bi bi-chevron-right Typography_Heading_H5"></i>
+                  </button>
+                </div>
+              </div>
     </div>
   );
 };
