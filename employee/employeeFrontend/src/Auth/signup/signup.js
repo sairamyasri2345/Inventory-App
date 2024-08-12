@@ -6,15 +6,42 @@ const EmpSignUp = () => {
   const [uname, setUname] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [errors, setErrors] = useState({});
+  const [isChecked, setIsChecked] = useState(false);
+  const [checkError, setCheckError] = useState("");
   const navigate = useNavigate();
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    if (!uname || !email || !password) {
-      alert("Please fill in all fields.");
-      return;
+  const validateForm = () => {
+    const newErrors = {};
+    if (!uname.trim()) {
+      newErrors.uname = "Full name is required";
+    }
+    if (!email.trim()) {
+      newErrors.email = "Email address is required";
+    } else if (!/\S+@\S+\.\S+/.test(email)) {
+      newErrors.email = "Email address is invalid";
+    }
+    if (!password) {
+      newErrors.password = "Password is required";
+    } else if (password.length < 6) {
+      newErrors.password = "Password must be at least 6 characters";
     }
 
+    if (!isChecked) {
+      setCheckError("Please check this box if you want to proceed");
+    } else {
+      setCheckError("");
+    }
+
+    return newErrors;
+  };
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    const formErrors = validateForm();
+    if (Object.keys(formErrors).length > 0) {
+      setErrors(formErrors);
+      return;
+    }
     console.log('Submitting:', { uname, email, password });
   
     fetch("https://inventory-app-employee.onrender.com/empSignup", {
@@ -86,6 +113,9 @@ const EmpSignUp = () => {
                   placeholder="Enter Your Name"
                   value={uname}
                 />
+                 {errors.uname && (
+                  <div className="invalid-feedback">{errors.uname}</div>
+                )}
               </div>
               <div className="form-group my-2">
                 <label htmlFor="email" className="py-2">
@@ -99,6 +129,9 @@ const EmpSignUp = () => {
                   placeholder="Enter Your Email"
                   value={email}
                 />
+                   {errors.email && (
+                  <div className="invalid-feedback">{errors.email}</div>
+                )}
               </div>
               <div className="form-group my-2">
                 <label htmlFor="exampleInputPassword1" className="py-2">
@@ -112,16 +145,22 @@ const EmpSignUp = () => {
                   placeholder="Password"
                   value={password}
                 />
+                  {errors.password && (
+                  <div className="invalid-feedback">{errors.password}</div>
+                )}
               </div>
               <div className="form-check my-2">
                 <input
                   type="checkbox"
-                  className="form-check-input"
+                  className="form-check-input mt-2"
                   id="check"
                 />
                 <label className="form-check-label" htmlFor="check">
                   Remember me
                 </label>
+                {checkError && (
+                  <div className="text-danger">{checkError}</div>
+                )}
               </div>
               <button
                 type="submit"

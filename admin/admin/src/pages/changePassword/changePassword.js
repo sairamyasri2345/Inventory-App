@@ -41,7 +41,7 @@ const ChangePassword = () => {
 
   return (
     <div className="d-flex justify-content-center align-items-center">
-      <div className="change-password-container my-5">
+      <div className="change-password-container my-5 px-4 py-4">
         <h2>Change Password</h2>
         {message && <p>{message}</p>}
         <form onSubmit={handlePasswordChange}>
@@ -67,7 +67,7 @@ const ChangePassword = () => {
               required
             />
           </div>
-          <button type="submit" className="btn btn-dark mt-3">
+          <button type="submit" className="btn btn-success mt-3">
             Reset Password
           </button>
         </form>

@@ -7,6 +7,8 @@ const EmpSignUp = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState({});
+  const [isChecked, setIsChecked] = useState(false);
+  const [checkError, setCheckError] = useState("");
   const navigate = useNavigate();
 
   const validateForm = () => {
@@ -24,6 +26,13 @@ const EmpSignUp = () => {
     } else if (password.length < 6) {
       newErrors.password = "Password must be at least 6 characters";
     }
+
+    if (!isChecked) {
+      setCheckError("Please check this box if you want to proceed");
+    } else {
+      setCheckError("");
+    }
+
     return newErrors;
   };
 
@@ -59,7 +68,7 @@ const EmpSignUp = () => {
   };
 
   return (
-    <div className="container-fluid d-flex align-items-center justify-content-center signup-cont min-vh-100 p-3">
+    <div className="container-fluid login-cont d-flex align-items-center justify-content-center signup-cont min-vh-100 p-3">
       <div className="row justify-content-center w-100">
         <div className="col-lg-11 d-flex justify-content-center align-items-center">
           <div className="form-container d-flex flex-column flex-md-row bg-white shadow-sm rounded-5 w-100">
@@ -141,12 +150,16 @@ const EmpSignUp = () => {
               <div className="form-check my-2">
                 <input
                   type="checkbox"
-                  className="form-check-input"
+                  className="form-check-input mt-2"
                   id="check"
+                  onChange={(e) => setIsChecked(e.target.checked)}
                 />
                 <label className="form-check-label" htmlFor="check">
                   Remember me
                 </label>
+                {checkError && (
+                  <div className="text-danger">{checkError}</div>
+                )}
               </div>
               <button
                 type="submit"

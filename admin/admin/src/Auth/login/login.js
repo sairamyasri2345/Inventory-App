@@ -79,7 +79,7 @@ const EmpLogin = () => {
   };
 
   return (
-    <div className="container-fluid d-flex align-items-center justify-content-center signup-cont vh-100 p-5">
+    <div className="container-fluid login-cont d-flex align-items-center justify-content-center signup-cont vh-100 p-5">
       <div className="row justify-content-center w-100">
         <div className="col-lg-11 d-flex justify-content-center align-items-center">
           <div className="form-container d-flex flex-column flex-md-row bg-white shadow-sm rounded-5 w-100">
@@ -132,7 +132,7 @@ const EmpLogin = () => {
               <div className="form-check my-2">
                 <input 
                   type="checkbox" 
-                  className="form-check-input" 
+                  className="form-check-input mt-2" 
                   id="check" 
                   onChange={(e) => setIsChecked(e.target.checked)}
                 />

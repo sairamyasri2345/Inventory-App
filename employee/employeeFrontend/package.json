@@ -1,5 +1,6 @@
 {
   "name": "employee",
+  "dashboard":"https://office.atmoslifestyle.in/dev/react/",
   "version": "0.1.0",
   "private": true,
   "dependencies": {

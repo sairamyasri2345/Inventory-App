@@ -8,8 +8,10 @@ const Order = ({ filterText }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [statusOptions] = useState(["Pending", "Approved", "Not Available"]);
   const rowsPerPage = 8;
+  const [loading, setLoading] = useState(true);
 
   const fetchProducts = async () => {
+    setLoading(true);
     try {
       const response = await axios.get(
         "https://inventory-app-employee.onrender.com/appliedProducts"
@@ -22,6 +24,8 @@ const Order = ({ filterText }) => {
       }
     } catch (error) {
       console.error("Error fetching products:", error);
+    }finally {
+      setLoading(false); // Stop loading
     }
   };
 
@@ -30,6 +34,12 @@ const Order = ({ filterText }) => {
   }, []);
 
   const handleStatusChange = async (productId, newStatus) => {
+    setProducts(prevProducts =>
+      prevProducts.map(product =>
+        product._id === productId ? { ...product, status: newStatus } : product
+      )
+    );
+  
     try {
       const response = await axios.put(`https://inventory-app-employee.onrender.com/appliedProducts/${productId}`, { status: newStatus });
       if (response.status === 200) {
@@ -37,9 +47,11 @@ const Order = ({ filterText }) => {
         fetchProducts();
       } else {
         console.error('Error updating status:', response.data.error);
+        fetchProducts()
       }
     } catch (error) {
       console.error('Error updating status:', error);
+      fetchProducts()
     }
   };
 
@@ -62,6 +74,8 @@ const Order = ({ filterText }) => {
 
   return (
     <div className="container-fluid">
+       {loading ? (
+        <p className="d-flex justify-content-center align-items-center text-success h2 py-5 my-5">Loading...</p>):(
       <div className="row p-5">
         <div className="col-md-12">
           <div className="table-responsive mx-3">
@@ -135,6 +149,7 @@ const Order = ({ filterText }) => {
           </div>
         </div>
       </div>
+       )}
     </div>
   );
 };

@@ -5,11 +5,13 @@ const ProductModal = ({ show, handleClose, handleSave, product }) => {
   const [productName, setProduct] = useState("");
   const [quantity, setQuantity] = useState("");
   const [description, setDescription] = useState("");
+  const [startDate, setStartDate] = useState("");
 
   useEffect(() => {
     if (product) {
       setProduct(product.productName);
       setQuantity(product.quantity);
+      setStartDate(product.startDate);
       setDescription(product.description);
     } else {
       setProduct("");
@@ -58,6 +60,16 @@ const ProductModal = ({ show, handleClose, handleSave, product }) => {
                 value={quantity}
                 onChange={handleQuantityChange}
                 placeholder="Enter Quantity"
+              />
+            </div>
+            <div className="form-group">
+              <label>Date</label>
+              <input
+                type="date"
+                value={startDate}
+                onChange={(e) => setStartDate(e.target.value)}
+                placeholder="mm/dd/yyyy"
+                className="form-control"
               />
             </div>
             <div className="form-group">
