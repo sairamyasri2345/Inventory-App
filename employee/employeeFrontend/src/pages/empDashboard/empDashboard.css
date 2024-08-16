@@ -10,4 +10,5 @@
   
   .dark-mode .table > :not(caption) > * > * {
     background-color: black !important;
+    color:white !important;
   }

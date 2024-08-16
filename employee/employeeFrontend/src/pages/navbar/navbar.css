@@ -290,3 +290,9 @@ margin-top: 0.07rem ;
 .dropdown-btn button:hover, .dropdown-btn button:focus{
   background-color: white !important;
 }
+.dark-mode nav{
+  background-color: black !important;
+}
+nav{
+  box-shadow: 3px 0px 8px rgb(255 255 244 / 20%);
+}

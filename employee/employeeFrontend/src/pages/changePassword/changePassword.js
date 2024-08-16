@@ -40,7 +40,10 @@ const ChangePassword = () => {
   };
 
   return (
-    <div className="d-flex justify-content-center align-items-center">
+   <div className="container-fluid">
+    <div className="row">
+     <div className="col-md-12">
+     <div className="d-flex justify-content-center align-items-center">
       <div className="change-password-container my-5 px-4 py-4">
         <h2>Change Password</h2>
         {message && <p>{message}</p>}
@@ -73,6 +76,10 @@ const ChangePassword = () => {
         </form>
       </div>
     </div>
+     </div>
+    </div>
+
+   </div>
   );
 };
 

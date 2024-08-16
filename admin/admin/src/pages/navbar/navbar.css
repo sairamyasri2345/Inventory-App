@@ -215,8 +215,12 @@
   }
 .dark-mode nav{
   background-color: black !important;
-}
+  box-shadow: 3px 0px 8px rgba(185, 185, 179, 0.2);
 
+}
+nav{
+  box-shadow: 3px 0px 8px rgb(255 255 244 / 20%);
+}
 
   .country-img {
     height: 1.25rem;
