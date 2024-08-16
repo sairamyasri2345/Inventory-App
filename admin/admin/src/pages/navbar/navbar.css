@@ -213,7 +213,9 @@
     font-weight: 900;
     font-size: 1.5rem;
   }
-
+.dark-mode nav{
+  background-color: black !important;
+}
 
 
   .country-img {

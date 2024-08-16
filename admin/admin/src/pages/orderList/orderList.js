@@ -3,7 +3,7 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 import "./orderList.css";
 import axios from "axios";
 
-const Order = ({ filterText }) => {
+const Order = ({ filterText, darkMode}) => {
   const [products, setProducts] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [statusOptions] = useState(["Pending", "Approved", "Not Available"]);
@@ -73,7 +73,9 @@ const Order = ({ filterText }) => {
   };
 
   return (
-    <div className="container-fluid">
+    <div className={`container-fluid ${
+      darkMode ? "dark-mode" : ""
+    }`}>
        {loading ? (
         <p className="d-flex justify-content-center align-items-center text-success h2 py-5 my-5">Loading...</p>):(
       <div className="row p-5">

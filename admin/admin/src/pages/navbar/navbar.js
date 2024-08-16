@@ -201,13 +201,15 @@ const EmpNavbar = ({
   };
 
   return (
-    <div className="container-fluid">
+    <div className={`container-fluid ${
+      darkMode ? "dark-mode" : ""
+    }`}>
       <div className="row">
         <div className="col-md-12 p-0 m-0">
           <nav
-            className={`navbar navbar-section px-2 ${
-              darkMode ? "dark-mode" : "bg-green text-white"
-            }`}
+            className="navbar navbar-section bg-green text-white px-2"
+             
+        
           >
             <div className="container-fluid">
               <input
