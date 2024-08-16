@@ -65,7 +65,7 @@
     background-color: white;
     border-radius: 15px;
     color:rgb(41, 38, 38) !important;
-    border: none;
+    border: none !important;
   }
   .form-control:focus {
     background-color: white !important;
@@ -271,4 +271,23 @@
 }
 .profile-initials{
   margin-top: 0.07rem ;
+}
+.dropdown-btn{
+  top:39px;
+  left:20px;
+
+}
+.dropdown-btn button{
+  background-color: #ffffff;
+  color:black;
+  font-size: 14px;
+  font-weight: 500;
+}
+.dropdown-btn button:hover, .dropdown-btn button:focus{
+  background-color: white !important;
+ 
+}
+.dropdown-menu {
+  background-color:unset !important;
+  border:none !important;
 }

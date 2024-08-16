@@ -272,3 +272,21 @@ border:1px solid white;
 .profile-initials{
 margin-top: 0.07rem ;
 }
+.dropdown-btn{
+  top:39px;
+  left:20px;
+
+}
+.dropdown-btn button{
+  background-color: #ffffff;
+  color:black;
+  font-size: 14px;
+  font-weight: 500;
+}
+.dropdown-menu {
+  background-color:unset !important;
+  border:none !important;
+}
+.dropdown-btn button:hover, .dropdown-btn button:focus{
+  background-color: white !important;
+}

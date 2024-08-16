@@ -8,30 +8,27 @@ const EmpProduct = ({
   productNames,
   employeeId,
   editMode,
-  currentProduct
+  currentProduct,
+  userData
 }) => {
   const [productName, setProductName] = useState("");
-  const [employeeName, setEmployeeName] = useState("");
   const [quantity, setQuantity] = useState("");
+  const [startDate, setStartDate] = useState("");
 
   useEffect(() => {
     if (editMode && currentProduct) {
-      setEmployeeName(currentProduct.employeeName);
       setProductName(currentProduct.productName);
+      setStartDate(currentProduct.startDate);
       setQuantity(currentProduct.quantity);
     } else {
-      setEmployeeName("");
       setProductName("");
       setQuantity("");
+      setStartDate("");
     }
   }, [editMode, currentProduct]);
 
-  useEffect(() => {
-    console.log('Product names in modal:', productNames); // Debug statement
-  }, [productNames]);
-
   const onSave = (e) => {
-    e.preventDefault(); 
+    e.preventDefault();
     if (parseInt(quantity, 10) <= 0) {
       alert('Quantity must be greater than 0.');
       return;
@@ -39,9 +36,10 @@ const EmpProduct = ({
 
     const formData = {
       productName,
-      employeeName,
       employeeId,
+      employeeName: userData.uname,
       quantity: parseInt(quantity, 10),
+      startDate,
     };
 
     handleApplyProduct(formData);
@@ -62,9 +60,9 @@ const EmpProduct = ({
               <label>Employee Name</label>
               <input
                 type="text"
-                value={employeeName}
-                onChange={(e) => setEmployeeName(e.target.value)}
-                placeholder="Enter the Employee Name"
+                value={userData?.uname || ""}
+                readOnly
+                placeholder="Employee Name"
               />
             </div>
             <div className="form-group">
@@ -72,7 +70,7 @@ const EmpProduct = ({
               <select
                 value={productName}
                 onChange={(e) => setProductName(e.target.value)}
-                 className="form-select"
+                className="form-select"
               >
                 <option value="">Select Product</option>
                 {productNames.map((product, index) => (
@@ -92,14 +90,24 @@ const EmpProduct = ({
                 placeholder="Enter quantity"
               />
             </div>
+            <div className="form-group">
+              <label>Date</label>
+              <input
+                type="date"
+                value={startDate}
+                onChange={(e) => setStartDate(e.target.value)}
+                placeholder="mm/dd/yyyy"
+                className="form-control"
+              />
+            </div>
             <div className="d-flex justify-content-end gap-3">
-          <button className="btn btn-secondary" onClick={handleClose}>
-            Cancel
-          </button>
-          <button className="btn btn-success" onClick={onSave}>
-            {editMode ? 'Update' : 'Submit'}
-          </button>
-        </div>
+              <button className="btn btn-secondary" onClick={handleClose}>
+                Cancel
+              </button>
+              <button className="btn btn-success" onClick={onSave}>
+                {editMode ? 'Update' : 'Submit'}
+              </button>
+            </div>
           </form>
         </div>
       </div>

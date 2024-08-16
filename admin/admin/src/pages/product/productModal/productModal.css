@@ -70,9 +70,9 @@
   background-color: white !important;
 }
 
-input:focus,input:hover{
+/* input:focus,input:hover{
   border:1px solid black !important;
-}
+} */
 
 /* Responsive styling for modal */
 @media (max-width: 768px) {

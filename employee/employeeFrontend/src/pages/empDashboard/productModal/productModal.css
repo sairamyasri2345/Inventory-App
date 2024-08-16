@@ -23,7 +23,7 @@
 }
 
 input:focus,input:hover{
-  border:1px solid black !important;
+  /* border:1px solid black !important; */
 }
   
   .product-container.d-flex {

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import EmpProduct from './productModal/productModal';
 import axios from 'axios';
 
-const EmployeeDashboard = ({ filterText }) => {
+const EmployeeDashboard = ({ filterText,userData }) => {
   const [show, setShow] = useState(false);
   const [editMode, setEditMode] = useState(false);
   const [appliedProducts, setAppliedProducts] = useState([]);
@@ -170,7 +170,7 @@ const EmployeeDashboard = ({ filterText }) => {
                         <td>{new Date(product.date).toLocaleDateString('en-GB')}</td>
                         <td>
                           <button
-                            className="btn btn-warning btn-sm mx-1"
+                            className="btn btn-success btn-sm mx-1"
                             onClick={() => handleEdit(product)}
                           >
                             <i className="bi bi-pencil"></i>
@@ -224,6 +224,7 @@ const EmployeeDashboard = ({ filterText }) => {
         productNames={productNames}
         employeeId={employeeId}
         editMode={editMode}
+        userData={userData} 
         currentProduct={currentProduct}
       />
     </div>

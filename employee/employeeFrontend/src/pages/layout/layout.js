@@ -220,6 +220,7 @@ const Layout = () => {
                     onEdit={handleEditProduct}
                     onView={handleViewProduct}
                     filterText={filterText}
+                    userData={userData}
                   />
                 }
               />

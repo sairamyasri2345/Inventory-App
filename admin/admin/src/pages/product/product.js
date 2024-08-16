@@ -177,6 +177,7 @@ const Product = ({ onAddProduct, filterText,darkMode }) => {
                       <th scope="col">Product</th>
                       <th scope="col">Availability</th>
                       <th scope="col">Quantity</th>
+                      <th>available Quantity</th>
                       <th scope="col">Date</th>
                       <th scope="col">Actions</th>
                     </tr>
@@ -195,7 +196,7 @@ const Product = ({ onAddProduct, filterText,darkMode }) => {
             </td>
                         <td>{product.quantity}</td>
       
-                        
+                        <td>{product.availableQuantity}</td>
                         <td>{product.date}</td>
                         <td>
                           <button

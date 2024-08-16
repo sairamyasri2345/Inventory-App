@@ -211,26 +211,69 @@ app.put("/updateProduct/:id", async (req, res) => {
 //     res.status(500).json({ error: 'Failed to update product status' });
 //   }
 // });
+// app.put('/appliedProducts/:id', async (req, res) => {
+//   try {
+//     const productId = req.params.id;
+//     const newStatus = req.body.status;
+
+//     const updatedProduct = await ProductApplication.findByIdAndUpdate(
+//       productId,
+//       { status: newStatus },
+//       { new: true }
+//     );
+
+//     if (updatedProduct) {
+//       res.status(200).json(updatedProduct);
+//     } else {
+//       res.status(404).json({ error: 'Product not found' });
+//     }
+//   } catch (error) {
+//     res.status(500).json({ error: 'Failed to update product status' });
+//   }
+// });
+
 app.put('/appliedProducts/:id', async (req, res) => {
   try {
     const productId = req.params.id;
     const newStatus = req.body.status;
 
-    const updatedProduct = await ProductApplication.findByIdAndUpdate(
+    // Find the product application by ID and update its status
+    const updatedProductApplication = await ProductApplication.findByIdAndUpdate(
       productId,
       { status: newStatus },
       { new: true }
     );
 
-    if (updatedProduct) {
-      res.status(200).json(updatedProduct);
-    } else {
-      res.status(404).json({ error: 'Product not found' });
+    if (!updatedProductApplication) {
+      return res.status(404).json({ error: 'Product application not found' });
     }
+
+    // If the status is "Approved", decrease the quantity of the product
+    if (newStatus === 'Approved') {
+      const productName = updatedProductApplication.productName;
+      const appliedQuantity = updatedProductApplication.quantity;
+
+      const product = await Product.findOne({ name: productName });
+
+      if (!product) {
+        return res.status(404).json({ error: 'Associated product not found' });
+      }
+
+      // Decrease the product quantity
+      product.quantity -= appliedQuantity;
+
+      // Update the availability based on the new quantity
+      product.availability = product.quantity > 0 ? 'Available' : 'Not Available';
+
+      await product.save(); // Save the updated product data
+    }
+
+    res.status(200).json(updatedProductApplication);
   } catch (error) {
     res.status(500).json({ error: 'Failed to update product status' });
   }
 });
+
 
 
 app.delete("/deleteProduct/:id", async (req, res) => {

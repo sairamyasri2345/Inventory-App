@@ -1,49 +1,54 @@
 import React, { useState } from "react";
 import "./signup.css";
-import { Link,useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const EmpSignUp = () => {
   const [uname, setUname] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [rememberMe, setRememberMe] = useState(false);
+
   const [errors, setErrors] = useState({});
-  const [isChecked, setIsChecked] = useState(false);
-  const [checkError, setCheckError] = useState("");
   const navigate = useNavigate();
 
   const validateForm = () => {
-    const newErrors = {};
-    if (!uname.trim()) {
-      newErrors.uname = "Full name is required";
+    let formErrors = {};
+
+    if (!uname) {
+      formErrors.uname = "Full Name is required.";
+    } else if (!/^[a-zA-Z\s]+$/.test(uname)) {
+      formErrors.uname = "Full Name should only contain letters.";
     }
-    if (!email.trim()) {
-      newErrors.email = "Email address is required";
+
+    if (!email) {
+      formErrors.email = "Email address is required.";
     } else if (!/\S+@\S+\.\S+/.test(email)) {
-      newErrors.email = "Email address is invalid";
+      formErrors.email = "Please enter a valid email address.";
     }
+
     if (!password) {
-      newErrors.password = "Password is required";
-    } else if (password.length < 6) {
-      newErrors.password = "Password must be at least 6 characters";
+      formErrors.password = "Password is required.";
     }
 
-    if (!isChecked) {
-      setCheckError("Please check this box if you want to proceed");
-    } else {
-      setCheckError("");
+    if (!rememberMe) {
+      formErrors.rememberMe = "You must agree to the terms to proceed.";
     }
 
-    return newErrors;
+    return formErrors;
   };
+
   const handleSubmit = (event) => {
     event.preventDefault();
+
     const formErrors = validateForm();
+
     if (Object.keys(formErrors).length > 0) {
       setErrors(formErrors);
       return;
     }
-    console.log('Submitting:', { uname, email, password });
-  
+
+    console.log("Submitting:", { uname, email, password });
+
     fetch("https://inventory-app-employee.onrender.com/empSignup", {
       method: "POST",
       headers: {
@@ -54,12 +59,12 @@ const EmpSignUp = () => {
     })
       .then((res) => res.json())
       .then((data) => {
-        console.log('Response:', data);
-        console.log(data)
+        console.log("Response:", data);
         if (data.error) {
           alert(data.error);
         } else {
           alert("Signup successful!");
+          localStorage.setItem("employeeName", uname);
           navigate("/empLogin");
         }
       })
@@ -68,11 +73,9 @@ const EmpSignUp = () => {
         alert("An error occurred during signup. Please try again.");
       });
   };
-  
-  
 
   return (
-    <div className="container-fluid  signup-cont d-flex align-items-center justify-content-center min-vh-100 p-3">
+    <div className="container-fluid signup-cont d-flex align-items-center justify-content-center min-vh-100 p-3">
       <div className="row justify-content-center w-100">
         <div className="col-lg-11 d-flex justify-content-center align-items-center">
           <div className="form-container d-flex flex-column flex-md-row bg-white shadow-sm rounded-5 w-100">
@@ -113,8 +116,8 @@ const EmpSignUp = () => {
                   placeholder="Enter Your Name"
                   value={uname}
                 />
-                 {errors.uname && (
-                  <div className="invalid-feedback">{errors.uname}</div>
+                {errors.uname && (
+                  <small className="text-danger">{errors.uname}</small>
                 )}
               </div>
               <div className="form-group my-2">
@@ -129,8 +132,8 @@ const EmpSignUp = () => {
                   placeholder="Enter Your Email"
                   value={email}
                 />
-                   {errors.email && (
-                  <div className="invalid-feedback">{errors.email}</div>
+                {errors.email && (
+                  <small className="text-danger">{errors.email}</small>
                 )}
               </div>
               <div className="form-group my-2">
@@ -145,21 +148,22 @@ const EmpSignUp = () => {
                   placeholder="Password"
                   value={password}
                 />
-                  {errors.password && (
-                  <div className="invalid-feedback">{errors.password}</div>
+                {errors.password && (
+                  <small className="text-danger">{errors.password}</small>
                 )}
               </div>
               <div className="form-check my-2">
                 <input
                   type="checkbox"
-                  className="form-check-input mt-2"
+                  className="form-check-input"
                   id="check"
+                  onChange={(e) => setRememberMe(e.target.checked)}
                 />
                 <label className="form-check-label" htmlFor="check">
                   Remember me
                 </label>
-                {checkError && (
-                  <div className="text-danger">{checkError}</div>
+                {errors.rememberMe && (
+                  <small className="text-danger">{errors.rememberMe}</small>
                 )}
               </div>
               <button

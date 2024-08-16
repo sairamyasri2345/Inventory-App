@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import "./login.css";
-import { Link,useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const EmpLogin = () => {
   const [email, setEmail] = useState("");
@@ -65,7 +65,6 @@ const EmpLogin = () => {
       .then((res) => res.json())
       .then((data) => {
         if (data.status === "ok") {
-          // alert("login successful");
           window.localStorage.setItem("token", data.data.token);
           window.localStorage.setItem('employeeId', data.data.employeeId);
           window.localStorage.setItem("loggedIn", true);
@@ -86,7 +85,7 @@ const EmpLogin = () => {
               }
             });
         } else {
-          alert("error");
+          alert("Login error");
         }
       });
   };
@@ -140,16 +139,19 @@ const EmpLogin = () => {
                   placeholder="Password"
                   value={password}
                 />
-                 {passwordError && <div className="text-danger d-flex justify-content-end">{passwordError}</div>}
+                {passwordError && <div className="text-danger d-flex justify-content-end">{passwordError}</div>}
               </div>
               <div className="form-check my-2 d-flex justify-content-between">
                 <div className=''>
-                <input type="checkbox" className="form-check-input mt-2" id="check" />
-                <label className="form-check-label" htmlFor="check">Remember me</label>
-                {checkError && <div className="text-danger">{checkError}</div>}
-                </div>
-                <div>
-                 <h6 className='text-success my-2'>Forgot Password?</h6>
+                  <input 
+                    type="checkbox" 
+                    className="form-check-input mt-2" 
+                    id="check" 
+                    checked={isChecked} 
+                    onChange={(e) => setIsChecked(e.target.checked)}
+                  />
+                  <label className="form-check-label" htmlFor="check">Remember me</label>
+                  {checkError && <div className="text-danger">{checkError}</div>}
                 </div>
               </div>
               <button type="submit" className="btn btn-success w-100 btn-lg my-3 rounded-5">
@@ -158,8 +160,11 @@ const EmpLogin = () => {
               <div className="text-center">
                 <h5>(or)</h5>
                 <h5 className="my-3">
-                  Don't have an account?<Link className="nav-link text-white fs-5 d-inline text-decoration-none " to="/empSignup"><span className="text-success px-1"> 
-                  Register</span></Link> Here
+                  Don't have an account? 
+                  <Link className="nav-link text-white fs-5 d-inline text-decoration-none" to="/empSignup">
+                    <span className="text-success px-1">Register</span>
+                  </Link> 
+                  Here
                 </h5>
               </div>
             </form>

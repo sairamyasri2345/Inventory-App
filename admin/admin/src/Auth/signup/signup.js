@@ -6,31 +6,37 @@ const EmpSignUp = () => {
   const [uname, setUname] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [rememberMe, setRememberMe] = useState(false);
   const [errors, setErrors] = useState({});
-  const [isChecked, setIsChecked] = useState(false);
-  const [checkError, setCheckError] = useState("");
   const navigate = useNavigate();
 
   const validateForm = () => {
     const newErrors = {};
+
+    // Validate full name (text only)
     if (!uname.trim()) {
       newErrors.uname = "Full name is required";
+    } else if (!/^[a-zA-Z\s]+$/.test(uname)) {
+      newErrors.uname = "Full name must contain only letters and spaces";
     }
+
+    // Validate email
     if (!email.trim()) {
       newErrors.email = "Email address is required";
     } else if (!/\S+@\S+\.\S+/.test(email)) {
       newErrors.email = "Email address is invalid";
     }
+
+    // Validate password
     if (!password) {
       newErrors.password = "Password is required";
     } else if (password.length < 6) {
       newErrors.password = "Password must be at least 6 characters";
     }
 
-    if (!isChecked) {
-      setCheckError("Please check this box if you want to proceed");
-    } else {
-      setCheckError("");
+    // Validate checkbox
+    if (!rememberMe) {
+      newErrors.rememberMe = "You must agree to the terms to continue";
     }
 
     return newErrors;
@@ -150,15 +156,20 @@ const EmpSignUp = () => {
               <div className="form-check my-2">
                 <input
                   type="checkbox"
-                  className="form-check-input mt-2"
+                  className={`form-check-input ${
+                    errors.rememberMe ? "is-invalid" : ""
+                  }`}
                   id="check"
-                  onChange={(e) => setIsChecked(e.target.checked)}
+                  checked={rememberMe}
+                  onChange={(e) => setRememberMe(e.target.checked)}
                 />
                 <label className="form-check-label" htmlFor="check">
                   Remember me
                 </label>
-                {checkError && (
-                  <div className="text-danger">{checkError}</div>
+                {errors.rememberMe && (
+                  <div className="invalid-feedback d-block">
+                    {errors.rememberMe}
+                  </div>
                 )}
               </div>
               <button
