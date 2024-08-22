@@ -7,8 +7,7 @@ import EmpNavbar from "../navbar/navbar";
 import "./layout.css";
 import ChangePassword from "../changePassword/changePassword";
 
-// const Layout = () => {
-//   const [products, setProducts] = useState([]);
+
 //   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 //   const [userData, setUserData] = useState(null);
 //   const [filterText, setFilterText] = useState("");

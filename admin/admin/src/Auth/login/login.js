@@ -32,8 +32,8 @@ const EmpLogin = () => {
     if (!password) {
       setPasswordError("Password is required");
       valid = false;
-    } else if (password.length < 6) {
-      setPasswordError("Password must be at least 6 characters long");
+    } else if (password.length < 5) {
+      setPasswordError("Password must be at least 5 characters long");
       valid = false;
     } else {
       setPasswordError("");

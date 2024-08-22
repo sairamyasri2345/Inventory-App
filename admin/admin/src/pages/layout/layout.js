@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route, Navigate} from "react-router-dom";
 import Sidebar from "../sidebar/sidebar";
 import Dashboard from "../Dashboard/Dashboard";
 import Order from "../orderList/orderList";
@@ -7,6 +7,7 @@ import EmpNavbar from "../navbar/navbar";
 import Products from "../product/product";
 import "./layout.css";
 import ChangePassword from "../changePassword/changePassword";
+
 
 const Layout = () => {
 
@@ -41,6 +42,7 @@ const Layout = () => {
     const fetchUserData = async () => {
       try {
         const token = window.localStorage.getItem("token");
+      
         const response = await fetch("https://inventory-app-admin-code.onrender.com/layout", {
           method: "POST",
           headers: {

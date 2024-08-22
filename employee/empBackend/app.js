@@ -143,7 +143,7 @@ app.get("/appliedProducts/:employeeId", async (req, res) => {
     res.status(500).json({ status: "error", error: error.message });
   }
 });
-
+  
 app.get("/appliedProducts", async (req, res) => {
   const { employeeId, productId } = req.query;
 
@@ -237,7 +237,6 @@ app.put('/appliedProducts/:id', async (req, res) => {
     const productId = req.params.id;
     const newStatus = req.body.status;
 
-    // Find the product application by ID and update its status
     const updatedProductApplication = await ProductApplication.findByIdAndUpdate(
       productId,
       { status: newStatus },
@@ -248,25 +247,15 @@ app.put('/appliedProducts/:id', async (req, res) => {
       return res.status(404).json({ error: 'Product application not found' });
     }
 
-    // If the status is "Approved", decrease the quantity of the product
-    if (newStatus === 'Approved') {
-      const productName = updatedProductApplication.productName;
-      const appliedQuantity = updatedProductApplication.quantity;
+    // Notify the employee
+    const employeeId = updatedProductApplication.employeeId;
+    const productName = updatedProductApplication.productName;
 
-      const product = await Product.findOne({ name: productName });
-
-      if (!product) {
-        return res.status(404).json({ error: 'Associated product not found' });
-      }
-
-      // Decrease the product quantity
-      product.quantity -= appliedQuantity;
-
-      // Update the availability based on the new quantity
-      product.availability = product.quantity > 0 ? 'Available' : 'Not Available';
-
-      await product.save(); // Save the updated product data
-    }
+    const notification = new Notification({
+      employeeId,
+      message: `Admin has updated the status of ${productName} to ${newStatus}.`,
+    });
+    await notification.save();
 
     res.status(200).json(updatedProductApplication);
   } catch (error) {
@@ -274,7 +263,22 @@ app.put('/appliedProducts/:id', async (req, res) => {
   }
 });
 
-
+// GET endpoint to retrieve notifications for an employee
+app.get('/notifications/:employeeId', async (req, res) => {
+  const { employeeId } = req.params;
+  try {
+    const notifications = await Notification.find({ employeeId });
+    res.status(200).json(notifications);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+app.get('/getNotifications', (req, res) => {
+  const notifications = [
+    { message: "Your status for Product X has been updated to Approved." }
+  ];
+  res.status(200).json(notifications);
+});
 
 app.delete("/deleteProduct/:id", async (req, res) => {
   const { id } = req.params;

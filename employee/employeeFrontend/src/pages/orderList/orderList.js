@@ -45,10 +45,18 @@ const Order = ({ filterText, onFilterChange }) => {
     return <div>Loading...</div>; 
   }
 
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-based
+    const year = date.getFullYear();
+    return `${day}/${month}/${year}`;
+  };
+
   const filteredData = data.filter((item) =>
     item.employeeId.includes(filterText) ||
     item.employeeName.toLowerCase().includes(filterText.toLowerCase()) ||
-    item.date.includes(filterText) ||
+    formatDate(item.date).includes(filterText) ||
     item.status.toLowerCase().includes(filterText.toLowerCase())
   );
 
@@ -89,7 +97,7 @@ const Order = ({ filterText, onFilterChange }) => {
                         <td>{item.employeeName}</td>
                         <td>{item.productName}</td>
                         <td>{item.quantity}</td>
-                        <td>{item.date}</td>
+                        <td>{formatDate(item.date)}</td>
                         <td>{item.status}</td>
                       </tr>
                     ))}

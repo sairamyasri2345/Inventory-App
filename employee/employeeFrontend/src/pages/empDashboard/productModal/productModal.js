@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 import "./productModal.css";
+import axios from 'axios';
 
 const EmpProduct = ({
   show,
@@ -14,6 +15,8 @@ const EmpProduct = ({
   const [productName, setProductName] = useState("");
   const [quantity, setQuantity] = useState("");
   const [startDate, setStartDate] = useState("");
+  const [availableQuantity, setAvailableQuantity] = useState(null);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     if (editMode && currentProduct) {
@@ -27,18 +30,54 @@ const EmpProduct = ({
     }
   }, [editMode, currentProduct]);
 
+  useEffect(() => {
+    if (productName) {
+      // Fetch available quantity for the selected product
+      const fetchAvailableQuantity = async () => {
+        try {
+          const response = await axios.get(`https://inventory-app-admin-code.onrender.com/products`);
+          const products = response.data.data;
+          const product = products.find(p => p.productName === productName);
+          if (product) {
+            const approvedCountsResponse = await axios.get('https://inventory-app-employee.onrender.com/appliedProducts');
+            const approvedCounts = approvedCountsResponse.data.reduce((acc, item) => {
+              if (item.status === "Approved" && item.productName === productName) {
+                acc += item.quantity;
+              }
+              return acc;
+            }, 0);
+            setAvailableQuantity(product.quantity - approvedCounts);
+          }
+        } catch (error) {
+          console.error('Error fetching available quantity:', error);
+        }
+      };
+
+      fetchAvailableQuantity();
+    }
+  }, [productName]);
+
   const onSave = (e) => {
     e.preventDefault();
-    if (parseInt(quantity, 10) <= 0) {
-      alert('Quantity must be greater than 0.');
+    const parsedQuantity = parseInt(quantity, 10);
+
+    if (parsedQuantity <= 0) {
+      setError('Quantity must be greater than 0.');
       return;
     }
+
+    if (availableQuantity !== null && parsedQuantity > availableQuantity) {
+      setError('You have selected more than available quantity.');
+      return;
+    }
+
+    setError(''); // Clear error message
 
     const formData = {
       productName,
       employeeId,
       employeeName: userData.uname,
-      quantity: parseInt(quantity, 10),
+      quantity: parsedQuantity,
       startDate,
     };
 
@@ -89,6 +128,7 @@ const EmpProduct = ({
                 onChange={(e) => setQuantity(e.target.value)}
                 placeholder="Enter quantity"
               />
+              {error && <div className="text-danger">{error}</div>}
             </div>
             <div className="form-group">
               <label>Date</label>

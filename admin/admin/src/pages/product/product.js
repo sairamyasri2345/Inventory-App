@@ -2,11 +2,12 @@ import React, { useState, useEffect } from "react";
 import "./product.css";
 import ProductModal from "./productModal/productModal";
 
-const Product = ({ onAddProduct, filterText,darkMode }) => {
+const Product = ({ onAddProduct, filterText, darkMode }) => {
   const [show, setShow] = useState(false);
   const [editIndex, setEditIndex] = useState(null);
   const [products, setProducts] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const [approvedCounts, setApprovedCounts] = useState({});
   const rowsPerPage = 8;
 
   useEffect(() => {
@@ -17,7 +18,7 @@ const Product = ({ onAddProduct, filterText,darkMode }) => {
           "https://inventory-app-admin-code.onrender.com/products"
         );
         const data = await response.json();
-        console.log("Fetched Products Data:", data); 
+        console.log("Fetched Products Data:", data);
         const productsWithDate = data.data.map((product) => ({
           ...product,
           date: new Date().toLocaleDateString(),
@@ -29,7 +30,27 @@ const Product = ({ onAddProduct, filterText,darkMode }) => {
       }
     };
 
+    const fetchApprovedCounts = async () => {
+      try {
+        const response = await fetch(
+          "https://inventory-app-employee.onrender.com/appliedProducts"
+        );
+        const data = await response.json();
+        const counts = data.reduce((acc, item) => {
+          if (item.status === "Approved") {
+            acc[item.productName] =
+              (acc[item.productName] || 0) + item.quantity;
+          }
+          return acc;
+        }, {});
+        setApprovedCounts(counts);
+      } catch (error) {
+        console.error("Error fetching approved counts:", error);
+      }
+    };
+
     fetchProducts();
+    fetchApprovedCounts();
   }, []);
 
   const handleClose = () => {
@@ -140,11 +161,13 @@ const Product = ({ onAddProduct, filterText,darkMode }) => {
   const filteredData = products.filter(
     (item) =>
       (item.employeeId || "").includes(filterText) ||
-      (item.employeeName || "").toLowerCase().includes(filterText.toLowerCase()) ||
+      (item.employeeName || "")
+        .toLowerCase()
+        .includes(filterText.toLowerCase()) ||
       (item.date || "").includes(filterText) ||
       (item.status || "").toLowerCase().includes(filterText.toLowerCase())
   );
-  
+
   const filteredProducts = products.filter((product) =>
     product.productName.toLowerCase().includes(filterText.toLowerCase())
   );
@@ -160,8 +183,10 @@ const Product = ({ onAddProduct, filterText,darkMode }) => {
     <div className={`container-fluid  ${darkMode ? "dark-mode" : ""}`}>
       <div className="row">
         <div className="col-md-12">
-          <div className="card m-3 
-          ">
+          <div
+            className="card m-3 
+          "
+          >
             <div className="card-body">
               <div className="d-flex justify-content-end">
                 <button onClick={handleShow} className="btn btn-success mb-4">
@@ -183,37 +208,46 @@ const Product = ({ onAddProduct, filterText,darkMode }) => {
                     </tr>
                   </thead>
                   <tbody>
-                    {filteredProducts.map((product, index) => (
-                      <tr key={index}>
-                        <td>{index + 1}</td>
-                        <td>{product.productName}</td>
-                        <td>
-              {product.quantity > 0 ? (
-                <span className="badge bg-success p-2">Available</span>
-              ) : (
-                <span className="badge bg-danger p-2">Not Available</span>
-              )}
-            </td>
-                        <td>{product.quantity}</td>
-      
-                        <td>{product.availableQuantity}</td>
-                        <td>{product.date}</td>
-                        <td>
-                          <button
-                            className="btn btn-success me-2 btn-sm"
-                            onClick={() => handleEdit(index)}
-                          >
-                            <i className="bi bi-pencil-square"></i>
-                          </button>
-                          <button
-                            className="btn btn-danger me-2 btn-sm"
-                            onClick={() => handleDelete(index)}
-                          >
-                            <i className="bi bi-trash"></i>
-                          </button>
-                        </td>
-                      </tr>
-                    ))}
+                    {currentData.map((product, index) => {
+                      const approvedCount =
+                        approvedCounts[product.productName] || 0;
+                      const availableQuantity =
+                        product.quantity - approvedCount;
+                      return (
+                        <tr key={index}>
+                          <td>{startRow + index + 1}</td>
+                          <td>{product.productName}</td>
+                          <td>
+                            {availableQuantity > 0 ? (
+                              <span className="badge bg-success p-2">
+                                Available
+                              </span>
+                            ) : (
+                              <span className="badge bg-danger p-2">
+                                Not Available
+                              </span>
+                            )}
+                          </td>
+                          <td>{product.quantity}</td>
+                          <td>{availableQuantity}</td>
+                          <td>{product.date}</td>
+                          <td>
+                            <button
+                              className="btn btn-success me-2 btn-sm"
+                              onClick={() => handleEdit(index)}
+                            >
+                              <i className="bi bi-pencil-square"></i>
+                            </button>
+                            <button
+                              className="btn btn-danger me-2 btn-sm"
+                              onClick={() => handleDelete(index)}
+                            >
+                              <i className="bi bi-trash"></i>
+                            </button>
+                          </td>
+                        </tr>
+                      );
+                    })}
                   </tbody>
                 </table>
               </div>
@@ -222,30 +256,31 @@ const Product = ({ onAddProduct, filterText,darkMode }) => {
         </div>
       </div>
       <div>
-      <div className="d-flex justify-content-between align-items-center mt-3 mx-3">
-        <span className="Typography_Heading_H5">
-          Showing {startRow + 1} to {startRow + currentData.length} of {filteredData.length} entries
-        </span>
-        <div>
-          <button
-            className="btn btn-outline-secondary me-2"
-            onClick={() => handlePageChange(currentPage - 1)}
-            disabled={currentPage === 1}
-          >
-            <i className="bi bi-chevron-left Typography_Heading_H5"></i>
-          </button>
+        <div className="d-flex justify-content-between align-items-center mt-3 mx-3">
           <span className="Typography_Heading_H5">
-            {currentPage} of {totalPages}
+            Showing {startRow + 1} to {startRow + currentData.length} of{" "}
+            {filteredProducts.length} entries
           </span>
-          <button
-            className="btn btn-outline-secondary ms-2"
-            onClick={() => handlePageChange(currentPage + 1)}
-            disabled={currentPage === totalPages}
-          >
-            <i className="bi bi-chevron-right Typography_Heading_H5"></i>
-          </button>
+          <div>
+            <button
+              className="btn btn-outline-secondary me-2"
+              onClick={() => handlePageChange(currentPage - 1)}
+              disabled={currentPage === 1}
+            >
+              <i className="bi bi-chevron-left Typography_Heading_H5"></i>
+            </button>
+            <span className="Typography_Heading_H5">
+              {currentPage} of {totalPages}
+            </span>
+            <button
+              className="btn btn-outline-secondary ms-2"
+              onClick={() => handlePageChange(currentPage + 1)}
+              disabled={currentPage === totalPages}
+            >
+              <i className="bi bi-chevron-right Typography_Heading_H5"></i>
+            </button>
+          </div>
         </div>
-      </div>
       </div>
 
       <ProductModal

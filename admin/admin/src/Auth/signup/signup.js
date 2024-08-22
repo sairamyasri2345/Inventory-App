@@ -30,8 +30,8 @@ const EmpSignUp = () => {
     // Validate password
     if (!password) {
       newErrors.password = "Password is required";
-    } else if (password.length < 6) {
-      newErrors.password = "Password must be at least 6 characters";
+    } else if (password.length < 5) {
+      newErrors.password = "Password must be at least 5 characters";
     }
 
     // Validate checkbox
