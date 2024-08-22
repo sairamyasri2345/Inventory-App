@@ -263,22 +263,8 @@ app.put('/appliedProducts/:id', async (req, res) => {
   }
 });
 
-// GET endpoint to retrieve notifications for an employee
-app.get('/notifications/:employeeId', async (req, res) => {
-  const { employeeId } = req.params;
-  try {
-    const notifications = await Notification.find({ employeeId });
-    res.status(200).json(notifications);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
-app.get('/getNotifications', (req, res) => {
-  const notifications = [
-    { message: "Your status for Product X has been updated to Approved." }
-  ];
-  res.status(200).json(notifications);
-});
+
+
 
 app.delete("/deleteProduct/:id", async (req, res) => {
   const { id } = req.params;
