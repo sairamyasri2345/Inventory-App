@@ -12,6 +12,7 @@ const EmployeeDashboard = ({ filterText,userData }) => {
   const [currentProduct, setCurrentProduct] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const rowsPerPage = 8;
+  
 
   useEffect(() => {
     const token = window.localStorage.getItem('token');
@@ -38,6 +39,7 @@ const EmployeeDashboard = ({ filterText,userData }) => {
     const fetchAppliedProducts = async () => {
       try {
         const response = await axios.get(`https://inventory-app-employee.onrender.com/appliedProducts/${employeeId}`);
+
         if (response.status === 200) {
           setAppliedProducts(response.data);
         } else {
@@ -97,6 +99,7 @@ const EmployeeDashboard = ({ filterText,userData }) => {
       let response;
       if (editMode) {
         response = await axios.put(`https://inventory-app-employee.onrender.com/updateProduct/${currentProduct._id}`, formData);
+
         setAppliedProducts(appliedProducts.map(product => product._id === currentProduct._id ? response.data : product));
       } else {
         response = await axios.post('https://inventory-app-employee.onrender.com/applyProduct', formData);
