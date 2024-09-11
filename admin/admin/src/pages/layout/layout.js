@@ -1,17 +1,15 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Routes, Route, Navigate} from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import Sidebar from "../sidebar/sidebar";
 import Dashboard from "../Dashboard/Dashboard";
 import Order from "../orderList/orderList";
 import EmpNavbar from "../navbar/navbar";
 import Products from "../product/product";
+import EmployeeList from "../employeeList/employeeList";
 import "./layout.css";
 import ChangePassword from "../changePassword/changePassword";
 
-
 const Layout = () => {
-
-
   const [products, setProducts] = useState([]);
   const [userData, setUserData] = useState(null);
   const [filterText, setFilterText] = useState("");
@@ -42,15 +40,18 @@ const Layout = () => {
     const fetchUserData = async () => {
       try {
         const token = window.localStorage.getItem("token");
-      
-        const response = await fetch("https://inventory-app-admin-code.onrender.com/layout", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Accept: "application/json",
-          },
-          body: JSON.stringify({ token }),
-        });
+
+        const response = await fetch(
+          "https://inventory-app-admin-code.onrender.com/layout",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Accept: "application/json",
+            },
+            body: JSON.stringify({ token }),
+          }
+        );
         if (!response.ok) {
           throw new Error("Failed to fetch user data");
         }
@@ -73,9 +74,8 @@ const Layout = () => {
     setProducts(products.filter((product) => product.id !== productId));
   };
   const handleFilterChange = (text) => {
-    setFilterText(text); 
-  }
-
+    setFilterText(text);
+  };
 
   const handleEditProduct = (updatedProduct) => {
     setProducts(
@@ -84,10 +84,6 @@ const Layout = () => {
       )
     );
   };
-
-
- 
-
 
   return (
     <div
@@ -113,36 +109,33 @@ const Layout = () => {
             toggleSidebar={toggleSidebar}
             userData={userData}
             sidebarCollapsed={sidebarCollapsed}
-            onFilterChange={handleFilterChange} 
+            onFilterChange={handleFilterChange}
           />
-      <div className="content">
-          <Routes>
-            <Route path="/" element={<Navigate to="/layout/dashboard" />} />
-            <Route
-              path="/dashboard"
-              element={
-                <Dashboard
-                  products={products}
-                  onDelete={handleDeleteProduct}
-                  onEdit={handleEditProduct}
-                />
-              }
-            />
-            <Route
-              path="/orders"
-              element={<Order filterText={filterText} />}
-            />
-            <Route
-              path="/products"
-              element={<Products filterText={filterText} />}
-            />
-            <Route
-              path="/changepassword"
-              element={<ChangePassword />}
-            />
-          </Routes>
-        </div>
-
+          <div className="content">
+            <Routes>
+              <Route path="/" element={<Navigate to="/layout/dashboard" />} />
+              <Route
+                path="/dashboard"
+                element={
+                  <Dashboard
+                    products={products}
+                    onDelete={handleDeleteProduct}
+                    onEdit={handleEditProduct}
+                  />
+                }
+              />
+              <Route
+                path="/orders"
+                element={<Order filterText={filterText} />}
+              />
+              <Route
+                path="/products"
+                element={<Products filterText={filterText} />}
+              />
+              <Route path="/changepassword" element={<ChangePassword />} />
+              <Route path="/empList" element={<EmployeeList />} />
+            </Routes>
+          </div>
         </div>
       </div>
     </div>

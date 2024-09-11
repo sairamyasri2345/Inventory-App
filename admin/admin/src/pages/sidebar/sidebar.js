@@ -3,13 +3,6 @@ import "./sidebar.css";
 import { Link } from "react-router-dom";
 
 const Sidebar = ({ darkMode, sidebarCollapsed }) => {
-  const sidebarContent = [
-    { icon: "bi-speedometer2", text: "Dashboard" },
-    { icon: "bi-table", text: "Orders" },
-    { icon: "bi-minecart-loaded", text: "Products" },
-    { icon: "bi-key", text: "ChangePassword" },
-  ];
-
   // const isOnlyIcons = sidebarContent.every((item) => !item.text);
 
   return (
@@ -29,8 +22,7 @@ const Sidebar = ({ darkMode, sidebarCollapsed }) => {
               <img
                 src="https://atmoslifestyle.com/wp-content/uploads/2023/05/Atmos-Beige-Logo-1-1.png"
                 alt="logo"
-                className={` ${
-        sidebarCollapsed ? "logo" : "Atmos-logo"}`}
+                className={` ${sidebarCollapsed ? "logo" : "Atmos-logo"}`}
               />
             </div>
 
@@ -43,6 +35,17 @@ const Sidebar = ({ darkMode, sidebarCollapsed }) => {
                   <i className="bi bi-microsoft icons"></i>
                   <p className=" px-3 pt-1 list-item-text d-lg-block d-none">
                     Dashboard
+                  </p>
+                </Link>
+              </li>
+              <li className="px-4 list-item mb-2">
+                <Link
+                  className="navlink text-white text-decoration-none d-flex"
+                  to="/layout/empList"
+                >
+                  <i className="bi bi-key  icons "></i>
+                  <p className="px-3 pt-1 list-item-text d-lg-block d-none">
+                    EmployeeList
                   </p>
                 </Link>
               </li>
@@ -69,6 +72,7 @@ const Sidebar = ({ darkMode, sidebarCollapsed }) => {
                   </p>
                 </Link>
               </li>
+
               <li className="px-4 list-item mb-2">
                 <Link
                   className="navlink text-white text-decoration-none d-flex"

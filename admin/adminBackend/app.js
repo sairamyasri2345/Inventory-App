@@ -5,8 +5,11 @@ const jwt = require("jsonwebtoken");
 const cors = require("cors");
 require("./adminDetails");
 require("./productschema");
+  require('./empSchema');
+
 const User = mongoose.model("AdminPageInfo");
 const Product = mongoose.model("Product");
+const Employee = mongoose.model("Employee");
 
 const app = express();
 const JWT_SECRET =
@@ -198,6 +201,34 @@ app.get("/products", async (req, res) => {
     res.status(500).json({ status: "error", error: error.message });
   }
 });
+
+//add employee
+app.post('/addEmployee', async (req, res) => {
+  try {
+    console.log('Incoming employee data:', req.body); // Log incoming data
+    const newEmployee = await Employee.create(req.body); // Save employee to database
+    res.status(200).json(newEmployee); // Return the saved employee
+  } catch (error) {
+    console.error('Error saving employee:', error.message); // Log any error
+    res.status(500).json({ message: 'Error saving employee' });
+  }
+});
+
+
+app.get('/employees', async (req, res) => {
+  try {
+    const employees = await Employee.find();
+    res.status(200).json(employees); // Return the list of employees
+  } catch (error) {
+    console.error('Error fetching employees:', error.message);
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+});
+
+
+
+
+
 const PORT=3001;
 
 app.listen(PORT, () => {

@@ -12,6 +12,10 @@ const EmployeeDashboard = ({ filterText,userData }) => {
   const [currentProduct, setCurrentProduct] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const rowsPerPage = 8;
+  const [timeError, setTimeError] = useState('');
+  
+  const TIME_LIMIT = 25 * 60 * 1000;
+
   
 
   useEffect(() => {
@@ -99,7 +103,6 @@ const EmployeeDashboard = ({ filterText,userData }) => {
       let response;
       if (editMode) {
         response = await axios.put(`https://inventory-app-employee.onrender.com/updateProduct/${currentProduct._id}`, formData);
-
         setAppliedProducts(appliedProducts.map(product => product._id === currentProduct._id ? response.data : product));
       } else {
         response = await axios.post('https://inventory-app-employee.onrender.com/applyProduct', formData);
@@ -110,20 +113,34 @@ const EmployeeDashboard = ({ filterText,userData }) => {
       console.error('Error applying product:', error);
     }
   };
-
-  const handleDelete = async (id) => {
-    try {
-      await axios.delete(`https://inventory-app-employee.onrender.com/deleteProduct/${id}`);
-      setAppliedProducts(appliedProducts.filter(product => product._id !== id));
-    } catch (error) {
-      console.error('Error deleting product:', error);
-    }
-  };
-
   const handleEdit = (product) => {
+    const timeSinceApplied = new Date() - new Date(product.date);
+    if (timeSinceApplied > TIME_LIMIT) {
+      setTimeError('You cannot edit this product after 25 minutes of application.');
+      return;
+    }
+  
     setCurrentProduct(product);
     setEditMode(true);
     setShow(true);
+    setTimeError(''); // Clear error if applicable
+  };
+  
+  const handleDelete = async (id) => {
+    const product = appliedProducts.find(p => p._id === id);
+    const timeSinceApplied = new Date() - new Date(product.date);
+    if (timeSinceApplied > TIME_LIMIT) {
+      setTimeError('You cannot delete this product after 25 minutes of application.');
+      return;
+    }
+  
+    try {
+      await axios.delete(`https://inventory-app-employee.onrender.com/deleteProduct/${id}`);
+      setAppliedProducts(appliedProducts.filter(product => product._id !== id));
+      setTimeError(''); // Clear error if applicable
+    } catch (error) {
+      console.error('Error deleting product:', error);
+    }
   };
 
   // Pagination logic
@@ -143,6 +160,7 @@ const EmployeeDashboard = ({ filterText,userData }) => {
         <div className="col-md-12">
           <div className="card m-3">
             <div className="card-body">
+            {timeError && <div className="alert alert-danger">{timeError}</div>}
               <div className="d-flex justify-content-end mx-3 my-3">
                 <button onClick={handleShow} className="btn btn-success mb-4">
                   <i className="bi bi-plus-lg px-2"></i>

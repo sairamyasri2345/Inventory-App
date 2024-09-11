@@ -169,6 +169,7 @@ app.post("/applyProduct", async (req, res) => {
       employeeName,
       productName,
       quantity,
+      createdAt: new Date(),
     });
     await productApplication.save();
     res.status(200).json(productApplication);
@@ -176,7 +177,28 @@ app.post("/applyProduct", async (req, res) => {
     res.status(500).json({ status: "error", error: error.message });
   }
 });
-app.put("/updateProduct/:id", async (req, res) => {
+
+
+
+const canEditOrDelete = async (req, res, next) => {
+  try {
+    const product = await ProductApplication.findById(req.params.id);
+    if (!product) {
+      return res.status(404).json({ error: "Product not found" });
+    }
+
+    const timeDifference = (new Date() - new Date(product.createdAt)) / 60000; // Difference in minutes
+    if (timeDifference > 25) {
+      return res.status(403).json({ error: "You can only edit or delete the product within 25 minutes of applying." });
+    }
+
+    req.product = product;
+    next();
+  } catch (error) {
+    res.status(500).json({ error: "Server Error" });
+  }
+};
+app.put("/updateProduct/:id", canEditOrDelete, async (req, res) => {
   const { id } = req.params;
   const { employeeId, employeeName, productName, quantity } = req.body;
   
@@ -211,62 +233,27 @@ app.put("/updateProduct/:id", async (req, res) => {
 //     res.status(500).json({ error: 'Failed to update product status' });
 //   }
 // });
-// app.put('/appliedProducts/:id', async (req, res) => {
-//   try {
-//     const productId = req.params.id;
-//     const newStatus = req.body.status;
-
-//     const updatedProduct = await ProductApplication.findByIdAndUpdate(
-//       productId,
-//       { status: newStatus },
-//       { new: true }
-//     );
-
-//     if (updatedProduct) {
-//       res.status(200).json(updatedProduct);
-//     } else {
-//       res.status(404).json({ error: 'Product not found' });
-//     }
-//   } catch (error) {
-//     res.status(500).json({ error: 'Failed to update product status' });
-//   }
-// });
-
 app.put('/appliedProducts/:id', async (req, res) => {
   try {
     const productId = req.params.id;
     const newStatus = req.body.status;
 
-    const updatedProductApplication = await ProductApplication.findByIdAndUpdate(
+    const updatedProduct = await ProductApplication.findByIdAndUpdate(
       productId,
       { status: newStatus },
       { new: true }
     );
 
-    if (!updatedProductApplication) {
-      return res.status(404).json({ error: 'Product application not found' });
+    if (updatedProduct) {
+      res.status(200).json(updatedProduct);
+    } else {
+      res.status(404).json({ error: 'Product not found' });
     }
-
-    // Notify the employee
-    const employeeId = updatedProductApplication.employeeId;
-    const productName = updatedProductApplication.productName;
-
-    const notification = new Notification({
-      employeeId,
-      message: `Admin has updated the status of ${productName} to ${newStatus}.`,
-    });
-    await notification.save();
-
-    res.status(200).json(updatedProductApplication);
   } catch (error) {
     res.status(500).json({ error: 'Failed to update product status' });
   }
 });
-
-
-
-
-app.delete("/deleteProduct/:id", async (req, res) => {
+app.delete("/deleteProduct/:id", canEditOrDelete, async (req, res) => {
   const { id } = req.params;
   
   try {

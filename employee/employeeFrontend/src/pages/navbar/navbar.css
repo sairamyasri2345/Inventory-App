@@ -296,3 +296,8 @@ margin-top: 0.07rem ;
 nav{
   box-shadow: 3px 0px 8px rgb(255 255 244 / 20%);
 }
+
+.start-75{
+  left: 75%!important;
+}
+

@@ -1,0 +1,52 @@
+/* Modal styling */
+.modal {
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    overflow: auto;
+    z-index: 1050;
+  }
+  
+  .modal-dialog {
+    position: relative;
+    width: auto;
+    margin: 1.75rem auto;
+  }
+  
+  .modal-content {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 0.3rem;
+    box-shadow: 0 3px 9px rgba(0, 0, 0, 0.5);
+  }
+  
+
+  .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .modal-title {
+    margin: 0;
+    font-size: 1.25rem;
+  }
+  
+
+  .close {
+    font-size: 2rem;
+    color: #000; 
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    margin: 0;
+    line-height: 1;
+  }
+  

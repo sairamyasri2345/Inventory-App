@@ -159,6 +159,7 @@ const EmpNavbar = ({
   const [userInitials, setUserInitials] = useState("");
   const [filterText, setFilterText] = useState("");
   const [dropdownOpen, setDropdownOpen] = useState(false);
+
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -171,12 +172,14 @@ const EmpNavbar = ({
   };
 
   useEffect(() => {
+    // Format date
     const date = new Date();
     const formattedDate = `${date.getDate()} ${date.toLocaleString("default", {
       month: "long",
     })} ${date.getFullYear()}`;
     setCurrentDate(formattedDate);
 
+    // Set user initials
     if (userData && userData.uname) {
       const name = userData.uname.trim();
       const nameParts = name.split(" ");
@@ -200,16 +203,10 @@ const EmpNavbar = ({
   };
 
   return (
-    <div className={`container-fluid ${
-      darkMode ? "dark-mode" : ""
-    }`}>
+    <div className={`container-fluid ${darkMode ? "dark-mode" : ""}`}>
       <div className="row">
         <div className="col-md-12 p-0 m-0">
-          <nav
-            className="navbar navbar-section px-2 bg-green text-white"
-             
-            
-          >
+          <nav className="navbar navbar-section px-2 bg-green text-white">
             <div className="container-fluid">
               <input
                 type="checkbox"
@@ -223,9 +220,12 @@ const EmpNavbar = ({
                   className={`bi ${
                     sidebarCollapsed ? "bi-x" : "bi-list"
                   } icons`}
+                  title={
+                    sidebarCollapsed ? "Expand Sidebar" : "Collapse Sidebar"
+                  }
                 ></i>
               </label>
-              <div className="input-group w-25 ">
+              <div className="input-group w-25">
                 <input
                   className="form-control"
                   type="search"
@@ -238,25 +238,27 @@ const EmpNavbar = ({
                   className="btn btn-outline-secondary search-btn d-flex justify-content-center align-items-center"
                   type="submit"
                 >
-                  <i className="bi bi-search"></i>
+                  <i className="bi bi-search" title="Search"></i>
                 </button>
               </div>
 
               <form className="d-flex justify-content-center align-items-center flex-wrap gap-4">
                 <div className="d-flex align-items-center text-white calender-btn p-1 rounded-3">
-                  <i className="bi bi-calendar"></i>
+                  <i className="bi bi-calendar" title="Current Date"></i>
                   <span className="px-2">{currentDate}</span>
                 </div>
 
                 <i
-                  className="bi bi-moon  screen-icons mx-2 "
+                  className="bi bi-moon screen-icons mx-2"
                   id="theme-icon"
                   onClick={toggleDarkMode}
+                  title="Toggle Dark Mode"
                 ></i>
 
                 <i
                   className="bi bi-fullscreen screen-icons mx-2"
                   onClick={toggleFullScreen}
+                  title="Toggle Fullscreen"
                 ></i>
 
                 <div className="d-flex gap-2 justify-content-center align-items-center position-relative">
@@ -265,18 +267,24 @@ const EmpNavbar = ({
                   </div>
                   <ul className="list-unstyled m-0 d-flex flex-column justify-content-center pt-2">
                     <li className="developer text-warning pb-1">Employee</li>
-                    <li className="developer h6 dropdown" onClick={toggleDropdown} style={{ cursor: "pointer" }}>
+                    <li
+                      className="developer h6 dropdown"
+                      onClick={toggleDropdown}
+                      style={{ cursor: "pointer" }}
+                    >
                       {userData?.uname || "Adison Jack"}
-                      <i className={`bi ${dropdownOpen ? "bi-chevron-up" : "bi-chevron-down"} mx-2`}></i>
+                      <i
+                        className={`bi ${
+                          dropdownOpen ? "bi-chevron-up" : "bi-chevron-down"
+                        } mx-2`}
+                        title={dropdownOpen ? "Collapse Menu" : "Expand Menu"}
+                      ></i>
                     </li>
                   </ul>
                   {dropdownOpen && (
                     <ul className="dropdown-menu dropdown-menu-end show dropdown-btn position-absolute">
                       <li>
-                        <button
-                          className="btn"
-                          onClick={handleLogout}
-                        >
+                        <button className="btn" onClick={handleLogout}>
                           Logout
                         </button>
                       </li>

@@ -70,7 +70,7 @@ const ChangePassword = () => {
               required
             />
           </div>
-          <button type="submit" className="btn btn-dark mt-3">
+          <button type="submit" className="btn btn-success mt-3">
             Reset Password
           </button>
         </form>
