@@ -190,7 +190,7 @@ const Product = ({ onAddProduct, filterText, darkMode }) => {
             <div className="card-body">
               <div className="d-flex justify-content-end">
                 <button onClick={handleShow} className="btn btn-success mb-4">
-                  <i className="bi bi-plus-lg px-2"></i>
+                  <i className="bi bi-plus-lg px-1"></i>
                   Add Product
                 </button>
               </div>

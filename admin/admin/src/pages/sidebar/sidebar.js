@@ -43,7 +43,7 @@ const Sidebar = ({ darkMode, sidebarCollapsed }) => {
                   className="navlink text-white text-decoration-none d-flex"
                   to="/layout/empList"
                 >
-                  <i className="bi bi-key  icons "></i>
+                <i class="bi bi-people-fill icons"></i>
                   <p className="px-3 pt-1 list-item-text d-lg-block d-none">
                     EmployeeList
                   </p>
