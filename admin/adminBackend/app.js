@@ -203,7 +203,7 @@ app.get("/products", async (req, res) => {
 });
 
 //add employee
-app.post('/addEmployee', async (req, res) => {
+app.post('/addEmployees', async (req, res) => {
   try {
     const newEmployee = await Employee.create(req.body);
     res.status(200).json(newEmployee);
@@ -212,7 +212,7 @@ app.post('/addEmployee', async (req, res) => {
   }
 });
 
-app.get('/employees', async (req, res) => {
+app.get('/employeeData', async (req, res) => {
   try {
     const employees = await Employee.find();
     res.status(200).json(employees);
