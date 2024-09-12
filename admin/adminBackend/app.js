@@ -205,27 +205,21 @@ app.get("/products", async (req, res) => {
 //add employee
 app.post('/addEmployee', async (req, res) => {
   try {
-    console.log('Incoming employee data:', req.body); // Log incoming data
-    const newEmployee = await Employee.create(req.body); // Save employee to database
-    res.status(200).json(newEmployee); // Return the saved employee
+    const newEmployee = await Employee.create(req.body);
+    res.status(200).json(newEmployee);
   } catch (error) {
-    console.error('Error saving employee:', error.message); // Log any error
     res.status(500).json({ message: 'Error saving employee' });
   }
 });
 
-
 app.get('/employees', async (req, res) => {
   try {
     const employees = await Employee.find();
-    res.status(200).json(employees); // Return the list of employees
+    res.status(200).json(employees);
   } catch (error) {
-    console.error('Error fetching employees:', error.message);
-    res.status(500).json({ message: 'Server error', error: error.message });
+    res.status(500).json({ message: 'Server error' });
   }
 });
-
-
 
 
 
